@@ -68,7 +68,7 @@ var Clarity = function () {
         down: false,
         left: false,
         right: false,
-        enter: false,
+        space: false,
     }
 
     window.onkeydown = this.keydown.bind(this);
@@ -122,8 +122,8 @@ Clarity.prototype.keydown = function (e) {
         case 68:
             _this.viewportControls.right = true;
             break;
-        case 13:
-            _this.viewportControls.enter = true;
+        case 32:
+            _this.viewportControls.space = true;
             break;
     }
 };
@@ -154,8 +154,8 @@ Clarity.prototype.keyup = function (e) {
         case 68:
             _this.viewportControls.right = false;
             break;
-        case 13:
-            _this.viewportControls.enter = false;
+        case 32:
+            _this.viewportControls.space = false;
             break;
     }
 };
@@ -685,7 +685,7 @@ Clarity.prototype.update_player = function () {
         this.cam.loc.x += moveSpeed;
     }
 
-    if (this.viewportControls.enter) {
+    if (this.viewportControls.space) {
         // Teleport the player to the mouse position
         this.player.loc.x = this.cameraToWorldSpace(this.mouse.x, this.camera.x) + 20;
         this.player.loc.y = this.cameraToWorldSpace(this.mouse.y, this.camera.y) + 20;
