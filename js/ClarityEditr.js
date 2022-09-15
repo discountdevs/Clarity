@@ -687,8 +687,8 @@ Clarity.prototype.update_player = function () {
 
     if (this.viewportControls.enter) {
         // Teleport the player to the mouse position
-        this.player.loc.x = this.mouse.x;
-        this.player.loc.y = this.mouse.y;
+        this.player.loc.x = this.cameraToWorldSpace(this.mouse.x, this.camera.x) + 20;
+        this.player.loc.y = this.cameraToWorldSpace(this.mouse.y, this.camera.y) + 20;
         this.player.vel.x = 0;
         this.player.vel.y = 0;
     }
