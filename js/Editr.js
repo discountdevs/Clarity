@@ -53,7 +53,7 @@ function init() {
 
     window.game = new Clarity();
     game.set_viewport(canvas.width, canvas.height);
-    game.load_map(window.map);
+    game.load_map(window.defineMap);
 
     // User controls the viewport with WASD. Viewport shan't be limited.
     game.limit_viewport = false;

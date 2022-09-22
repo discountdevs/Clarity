@@ -104,7 +104,18 @@ var Clarity = function () {
     }
   };
   
-  Clarity.prototype.load_map = function (map) {
+  Clarity.prototype.load_map = function (mapfunction) {
+    var map;
+    try {
+      mapfunction();
+      map = window.map;
+    } catch(e) {
+      game.log("Error loading map:");
+      game.error(e.toString());
+      return;
+    }
+    
+
     if (typeof map === 'undefined' ||
       typeof map.data === 'undefined' ||
       typeof map.keys === 'undefined') {

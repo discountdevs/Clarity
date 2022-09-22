@@ -24,7 +24,7 @@
   <input type="file" id="actual-btn"/>
 
   <ul class="side-menu">
-    <li><a href="/editr.html" target="_blank"><span class="fa fa-pen-ruler"></span>Editr</a></li>
+    <li><a href="./editr.html"><span class="fa fa-pen-ruler"></span>Editr</a></li>
     <li><a href="#" onclick="alert('WIP')"><span class="fa-solid fa-screwdriver-wrench"></span>Workshop</a></li>
     <li><a href="#"><span class="fa-solid fa-file-import"></span><label for="actual-btn">Load Mapvar</label></a></li>
     <li><a href="#" onclick="alert('WIP')"><span class="fa fa-cog"></span>Settings</a></li>
@@ -58,7 +58,8 @@
 
           try {
             eval(contents);
-            game.load_map(window.map);
+            console.log(defineMap);
+            game.load_map(defineMap);
           } catch(e) {
             game.log("Error loading map:");
             game.error(e.toString());
