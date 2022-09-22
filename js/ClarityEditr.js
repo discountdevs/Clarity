@@ -80,15 +80,14 @@ Clarity.prototype.handle_lobby = function (players) {
 }
 
 Clarity.prototype.error = function (message) {
-
     if (this.alert_errors) alert(message);
-    if (this.log_info) console.log(message);
-};
-
-Clarity.prototype.log = function (message) {
-
-    if (this.log_info) console.log(message);
-};
+    if (this.log_info) console.log("%c[Clarity] Error!: " + message, "color: #FF0000");
+    if (this.log_info) this.log("If this error occurs frequently, send a report: https://discord.gg/FbEJ2DyGME");
+  };
+  
+  Clarity.prototype.log = function (message) {
+    if (this.log_info) console.log("%c[Clarity] " + message, "color: #02a0c0");
+  };
 
 Clarity.prototype.set_viewport = function (x, y) {
 
@@ -125,6 +124,10 @@ Clarity.prototype.keydown = function (e) {
         case 32:
             _this.viewportControls.space = true;
             break;
+    }
+
+    if (this.current_map.keydown_hook){
+        this.current_map.keydown_hook(e.keyCode);
     }
 };
 
@@ -170,9 +173,9 @@ Clarity.prototype.load_map = function (map) {
         return false;
     }
 
-    console.log("Using format Version", map.formatVersion);
+    this.log("Using format version", map.version);
     if (map.version >= 2) {
-        console.log("Using new map format!");
+        this.log("Using new map format!");
         this.legacy_map = false;
     }
 
@@ -261,7 +264,7 @@ Clarity.prototype.draw_tile = function (x, y, tile, context) {
 
     if (!tile || !tile.colour) return;
     if (!tile.img) {
-        // console.log("no image!")
+        // this.log("no image!")
         context.fillStyle = tile.colour;
         context.fillRect(
             x,
@@ -340,8 +343,6 @@ Clarity.prototype.move_player = function () {
         };
     }
 
-
-
     if (tile.gravity) {
 
         this.player.vel.x += tile.gravity.x;
@@ -394,9 +395,15 @@ Clarity.prototype.move_player = function () {
     var right2 = this.get_tile(t_x_right, y_near2);
 
 
-    if (this.detectSides(18).result) {
-        // make player fall slowly
-        this.player.vel.y *= 0.8;
+    if (this.legacy_map) {
+        if (this.detectSides(18).result) {
+          // make player fall slowly
+          this.player.vel.y *= 0.8;
+        }
+      } else {
+        if (this.current_map.update_hook) {
+          this.current_map.update_hook();
+        }
     }
 
     if (tile.jump && this.jump_switch > 15) {
@@ -539,7 +546,7 @@ Clarity.prototype.move_player = function () {
     if (this.last_tile != tile.id && tile.script) {
         if (this.legacy_map) {
             // Unsecure, needs patches
-            console.warn("You're using legacy script format, please update your map!");
+            this.error("You're using legacy script format, please update your map!");
             eval(this.current_map.scripts[tile.script]);
         } else {
             this.current_map.scripts[tile.script]();

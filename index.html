@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" oncontextmenu="return false;">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/style.css">
+  <title>Clarity Level Player</title>
+  <!-- JavaScript -->
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="shortcut icon"
+    href="/assets/favicon.png"
+    type="image/png">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@4/dark.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/gh/pieroxy/lz-string@master/libs/lz-string.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/gh/hung1001/font-awesome-pro-v6@44659d9/css/all.min.css" rel="stylesheet">
+  <script type="text/javascript" src="js/jsonfn.min.js"></script>
+</head>
+
+<body>
+  <ul class="side-menu">
+    <li><a href="/editr.html" target="_blank"><span class="fa fa-pen-ruler"></span>Editr</a></li>
+    <li><a href="javascript:alert('WIP');"><span class="fa-solid fa-screwdriver-wrench"></span>Workshop</a></li>
+    <li><a href="#" onclick="loadFromBrowser();"><span class="fa-solid fa-file-import"></span>Load Mapvar</a></li>
+    <li><a href="#"><span class="fa fa-cog"></span>Settings</a></li>
+    <li><a href="https://discord.gg/FbEJ2DyGME"><span class="fa-brands fa-discord"></span>Join our Discord</a></li>
+    <li><a href="#"><span class="fa fa-code"></span>Made by the Discount Devs</a></li>
+  </ul>
+
+  <span id="tooltip"></span>
+  <script src="js/Clarity.js"></script>
+  <script src="js/EditrDefaultMap.js"></script>
+  <script src="js/Script.js"></script>
+  <script>
+    window.requestAnimFrame =
+      window.requestAnimationFrame ||
+      window.webkitRequestAnimationFrame ||
+      window.mozRequestAnimationFrame ||
+      window.oRequestAnimationFrame ||
+      window.msRequestAnimationFrame ||
+      function (callback) {
+        return window.setTimeout(callback, 1000 / 60);
+      };
+
+    function loadFromBrowser(){
+        // Sweetalert fancy popup
+        Swal.fire({
+            title: 'Load Mapvar',
+            input: 'text',
+            inputAttributes: {
+                autocapitalize: 'off'
+            },
+            showCancelButton: true,
+            confirmButtonText: 'Load',
+            showLoaderOnConfirm: true,
+            preConfirm: (mapvar) => {
+                // Load mapvar
+                eval(mapvar);
+                game.load_map(window.map);
+            },
+            allowOutsideClick: () => !Swal.isLoading()
+        })
+    };
+  </script>
+</body>
+
+</html>
