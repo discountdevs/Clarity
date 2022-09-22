@@ -29,6 +29,14 @@ html {
     user-drag: none;
 }
 
+#actual-btn {
+  display: none;
+}
+
+label{
+  cursor: pointer;
+}
+
 #editrCanvas {
     width: 100%;
     height: 100%;

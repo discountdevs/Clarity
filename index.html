@@ -20,13 +20,16 @@
 </head>
 
 <body>
+  <!-- Mapvar upload form  -->
+  <input type="file" id="actual-btn"/>
+
   <ul class="side-menu">
     <li><a href="/editr.html" target="_blank"><span class="fa fa-pen-ruler"></span>Editr</a></li>
-    <li><a href="javascript:alert('WIP');"><span class="fa-solid fa-screwdriver-wrench"></span>Workshop</a></li>
-    <li><a href="#" onclick="loadFromBrowser();"><span class="fa-solid fa-file-import"></span>Load Mapvar</a></li>
-    <li><a href="#"><span class="fa fa-cog"></span>Settings</a></li>
+    <li><a href="#" onclick="alert('WIP')"><span class="fa-solid fa-screwdriver-wrench"></span>Workshop</a></li>
+    <li><a href="#"><span class="fa-solid fa-file-import"></span><label for="actual-btn">Load Mapvar</label></a></li>
+    <li><a href="#" onclick="alert('WIP')"><span class="fa fa-cog"></span>Settings</a></li>
     <li><a href="https://discord.gg/FbEJ2DyGME"><span class="fa-brands fa-discord"></span>Join our Discord</a></li>
-    <li><a href="#"><span class="fa fa-code"></span>Made by the Discount Devs</a></li>
+    <li><a href="https://discountdevs.github.io/"><span class="fa fa-code"></span>Made by the Discount Devs</a></li>
   </ul>
 
   <span id="tooltip"></span>
@@ -44,25 +47,28 @@
         return window.setTimeout(callback, 1000 / 60);
       };
 
-    function loadFromBrowser(){
-        // Sweetalert fancy popup
-        Swal.fire({
-            title: 'Load Mapvar',
-            input: 'text',
-            inputAttributes: {
-                autocapitalize: 'off'
-            },
-            showCancelButton: true,
-            confirmButtonText: 'Load',
-            showLoaderOnConfirm: true,
-            preConfirm: (mapvar) => {
-                // Load mapvar
-                eval(mapvar);
-                game.load_map(window.map);
-            },
-            allowOutsideClick: () => !Swal.isLoading()
-        })
-    };
+      function readSingleFile(e) {
+        var file = e.target.files[0];
+        if (!file) {
+          return;
+        }
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          var contents = e.target.result;
+
+          try {
+            eval(contents);
+            game.load_map(window.map);
+          } catch(e) {
+            game.log("Error loading map:");
+            game.error(e.toString());
+          }
+        };
+        reader.readAsText(file);
+      };
+
+      document.getElementById('actual-btn')
+        .addEventListener('change', readSingleFile, false);
   </script>
 </body>
 
