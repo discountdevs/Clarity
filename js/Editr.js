@@ -49,11 +49,10 @@ function init() {
 
     document.body.appendChild(canvas);
 
-    generate_block_selectors();
-
     window.game = new Clarity();
     game.set_viewport(canvas.width, canvas.height);
     game.load_map(window.defineMap);
+    generate_block_selectors();
 
     // User controls the viewport with WASD. Viewport shan't be limited.
     game.limit_viewport = false;

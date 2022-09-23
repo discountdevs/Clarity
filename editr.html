@@ -28,7 +28,7 @@
     <li><a href="#" onclick="saveToBrowser();"><span class="fa fa-file"></span>Save to Browser</a></li>
     <li><a href="#" onclick="loadFromBrowser();"><span class="fas fa-file-import"></span>Load from Browser</a></li>
     <li><a href="#"><span class="fas fa-download"></span>Download Mapvar</a></li>
-    <li><a href="#"><span class="fa fa-upload"></span><label for="actual-btn">Upload Mapvar</label></a></li>
+    <label for="actual-btn"></label><li><a href="#"><span class="fa fa-upload"></span>Upload Mapvar</a></li></label>
     <li><a href="#"><span class="fas fa-cog"></span>Settings</a></li>
   </ul>
 
@@ -150,7 +150,7 @@
 
           try {
             eval(contents);
-            game.load_map(window.map);
+            game.load_map(window.defineMap);
           } catch(e) {
             game.log("Error loading map:");
             game.error(e.toString());

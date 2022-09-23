@@ -99,7 +99,7 @@ window.defineMap = function() {
         id: 0,
         colour: "#333",
         solid: 0,
-        blockname: "Void"
+        blockname: "NullPtrException on line 102, column 14 at 0x00000000" // Me, leave an easter egg? I would never.
       },
       // Air
       {
@@ -233,7 +233,7 @@ window.defineMap = function() {
         fore: 1,
         boost: 1,
         img: spedimg,
-        blockname: "gotta go fast zone"
+        blockname: "Sanic Zone"
       },
       // Tar
       {
@@ -250,7 +250,7 @@ window.defineMap = function() {
         jump: 1,
         fore: 1,
         img: tarimg,
-        blockname: "Tar"
+        blockname: "Tär"
       },
       // Quick Sand
       {
@@ -267,7 +267,7 @@ window.defineMap = function() {
         jump: 1,
         fore: 1,
         img: sandimg,
-        blockname: "Quicksand"
+        blockname: "Speedsand"
       },
       // Checkpoint
       {
@@ -295,7 +295,7 @@ window.defineMap = function() {
         },
         jump: 1,
         img: iceimg,
-        blockname: "slippery stuff"
+        blockname: "Ice"
       },
       // Wall Jump
       {
@@ -715,11 +715,11 @@ window.defineMap = function() {
       game.player.colour = "#"+(Math.random()*0xFFFFFF<<0).toString(16);
     },
       /* you could load a new mapvar here */
-      next_level: function(){
+    next_level: function(){
       game.current_map.player.x = 1;
       game.current_map.player.y = 1;
       game.checkpoint = false;
-      game.load_map(map);
+      game.load_map(window.defineMap);
       game.current_map.keys[10].solid = 1;
       game.current_map.keys[10].img = lockedimg;
       game.current_map.keys[21].solid = 1;
@@ -732,8 +732,8 @@ window.defineMap = function() {
         html: "<i>" + winmsgs[Math.floor(Math.random() * winmsgs.length)] + "</i><br><br><b>Your time: " + (timemillis * 0.001).toFixed(2) + " seconds</b><br><br><button class=\'button-62\' role=\'button\' onclick=\'subTime(" + (timemillis * 0.001).toFixed(2) + ")\'>Submit time to leaderboard</button>",
       });
     },
-      death: function(){
-      game.load_map(map);
+    death: function(){
+      game.load_map(window.defineMap);
       game.current_map.keys[10].solid = 1;
       game.current_map.keys[10].img = lockedimg;
       game.current_map.keys[21].solid = 1;
@@ -745,7 +745,7 @@ window.defineMap = function() {
         // });
       }
     },
-      unlock: function(){
+    unlock: function(){
       game.current_map.keys[10].solid = 0;
       game.current_map.keys[10].img = airimg;
     },

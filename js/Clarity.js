@@ -743,8 +743,6 @@ var Clarity = function () {
         };
       }
     }
-  
-  
   }
   
   Clarity.prototype.isInside = function (id) {
