@@ -127,6 +127,10 @@ var Clarity = function () {
         this.textures[texture] = new Image();
         this.textures[texture].src = map.textures[texture];
       }
+      if (map.player_img){
+        this.player_img = new Image();
+        this.player_img.src = map.player_img;
+      }
     }
 
     this.current_map = map;
@@ -587,19 +591,33 @@ var Clarity = function () {
   
   Clarity.prototype.draw_player = function (context) {
   
-    context.fillStyle = this.player.colour;
+    if (this.current_map.player_img) {
+      var img = this.player_img;
+      // Draw it to the screen
+      context.drawImage(img,
+        this.player.loc.x + this.tile_size / 2 - this.camera.x - this.tile_size / 2,
+        this.player.loc.y + this.tile_size / 2 - this.camera.y - this.tile_size / 2,
+        this.tile_size,
+        this.tile_size
+      );
+    } else {
+      context.fillStyle = this.player.colour;
   
-    context.beginPath();
-  
-    context.arc(
-      this.player.loc.x + this.tile_size / 2 - this.camera.x,
-      this.player.loc.y + this.tile_size / 2 - this.camera.y,
-      this.tile_size / 2 - 1,
-      0,
-      Math.PI * 2
-    );
-  
-    context.fill();
+      context.beginPath();
+    
+      context.arc(
+        this.player.loc.x + this.tile_size / 2 - this.camera.x,
+        this.player.loc.y + this.tile_size / 2 - this.camera.y,
+        this.tile_size / 2 - 1,
+        0,
+        Math.PI * 2
+      );
+    
+      context.fill();
+    }
+
+
+
   
     if (this.debug) {
       context.strokeRect(
@@ -607,7 +625,7 @@ var Clarity = function () {
         this.player.loc.y + this.tile_size / 2 - this.camera.y - this.tile_size / 2,
         this.tile_size,
         this.tile_size
-      )
+      );
     }
   };
   

@@ -1,5 +1,10 @@
 /* Abandon hope, all ye who enter here */
 
+html,body{
+  font-family:Verdana,sans-serif;
+  font-size:15px;
+}
+
 body {
 	background: #1d1b31;
     padding: 0px;
