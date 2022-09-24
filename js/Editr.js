@@ -31,14 +31,16 @@ function init() {
         keys.forEach(tile => {
             if (tile.blockname) {
                 if (tile.img) {
-                    var base64img = tile.img.src;
+                    var base64img = game.current_map.textures[tile.img];
                     var htmlImg = `
                     <img src="{src}" class="tileOption unselected" onmouseover="tooltip('{tilename}', this);" onclick="select({id}, this);" onmouseleave="untooltip(this);" id="selectBlock{id}">
                     `.replace("{src}", base64img).replace("{id}", tile.id).replace("{id}", tile.id).replace("{tilename}", tile.blockname);
                     tileBar.innerHTML = tileBar.innerHTML + htmlImg;
                 } else {
-                    return;
+                    game.log("[Editr] Warning: Tile " + tile.blockname + " has no image!");
                 }
+            } else {
+                game.log("[Editr] Warning: Tile " + tile.id + " has no name!");
             }
         });
     }
@@ -49,9 +51,10 @@ function init() {
 
     document.body.appendChild(canvas);
 
+    window.map = new Mapvar();
     window.game = new Clarity();
     game.set_viewport(canvas.width, canvas.height);
-    game.load_map(window.defineMap);
+    game.load_map(window.map);
     generate_block_selectors();
 
     // User controls the viewport with WASD. Viewport shan't be limited.
