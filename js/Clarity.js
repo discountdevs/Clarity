@@ -104,18 +104,7 @@ var Clarity = function () {
     }
   };
   
-  Clarity.prototype.load_map = function (mapfunction) {
-    var map;
-    try {
-      mapfunction();
-      map = window.map;
-    } catch(e) {
-      game.log("Error loading map:");
-      game.error(e.toString());
-      return;
-    }
-    
-
+  Clarity.prototype.load_map = function (map) {
     if (typeof map === 'undefined' ||
       typeof map.data === 'undefined' ||
       typeof map.keys === 'undefined') {
@@ -131,7 +120,15 @@ var Clarity = function () {
       this.legacy_map = false;
     }
   
-  
+    // Process texture data
+    if (!this.legacy_map){
+      this.textures = {};
+      for (const texture in map.textures){
+        this.textures[texture] = new Image();
+        this.textures[texture].src = map.textures[texture];
+      }
+    }
+
     this.current_map = map;
   
     this.current_map.background = map.background || '#333';
@@ -216,7 +213,6 @@ var Clarity = function () {
   
     if (!tile || !tile.colour) return;
     if (!tile.img) {
-      // this.log("no image!")
       context.fillStyle = tile.colour;
       context.fillRect(
         x,
@@ -225,7 +221,11 @@ var Clarity = function () {
         this.tile_size
       );
     } else {
-      ctx.drawImage(tile.img, x, y, this.tile_size, this.tile_size);
+      if (this.legacy_map){
+        context.drawImage(tile.img, x, y, this.tile_size, this.tile_size);
+      } else {
+        context.drawImage(this.textures[tile.img], x, y, this.tile_size, this.tile_size);
+      }
     }
   
   
