@@ -53,14 +53,13 @@
         var reader = new FileReader();
         reader.onload = function(e) {
           var contents = e.target.result;
-
-          try {
-            eval(contents);
-            game.load_map(window.defineMap);
-          } catch(e) {
-            game.log("Error loading map:");
-            game.error(e.toString());
+          // Load the contents of the file into window.map
+          game.log("[Editr] Attempting to load mapvar at "+file.name);
+          var jsonMap = JSONfn.parse(contents);
+          for (var key in jsonMap){
+            window.map[key] = jsonMap[key];
           }
+          game.load_map(window.map);
         };
         reader.readAsText(file);
       };
