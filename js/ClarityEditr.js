@@ -164,6 +164,9 @@ Clarity.prototype.keyup = function (e) {
 };
 
 Clarity.prototype.load_map = function (map) {
+    this.player_img = null;
+    this.textures = {};
+
     if (typeof map === 'undefined' ||
         typeof map.data === 'undefined' ||
         typeof map.keys === 'undefined') {
@@ -179,12 +182,17 @@ Clarity.prototype.load_map = function (map) {
         this.legacy_map = false;
     }
 
+
     // Process texture data
     if (!this.legacy_map){
         this.textures = {};
-        for (const texture in map.textures){
-            this.textures[texture] = new Image();
-            this.textures[texture].src = map.textures[texture];
+        this.player_img = null;
+
+        if (map.textures){
+            for (const texture in map.textures){
+                this.textures[texture] = new Image();
+                this.textures[texture].src = map.textures[texture];
+            }
         }
         if (map.player_img){
             this.player_img = new Image();

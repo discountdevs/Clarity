@@ -1,0 +1,27 @@
+{
+  "name": "Clarity",
+  "short_name": "Clarity",
+  "description": "Build your own 2D games in the browser using Clarity's powerful Mapvar system!",
+  "icons": [
+    {
+      "src": "assets/favicon.png",
+      "sizes": "16x16",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/logo_medium.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/logo_big.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "index.html",
+  "display": "minimal-ui",
+  "theme_color": "#1D1B31",
+  "background_color": "#1D1B31",
+  "id": "ClarityV2-Player"
+}

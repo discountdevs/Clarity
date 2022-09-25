@@ -7,28 +7,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="css/editr.css">
   <title>Clarity Editr</title>
-  <link rel="shortcut icon"
-    href="./assets/favicon.png"
-    type="image/png">
+  <link rel="shortcut icon" href="./assets/favicon.png" type="image/png">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@4/dark.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/gh/pieroxy/lz-string@master/libs/lz-string.min.js"></script>
+  <link rel="manifest" href="./clarity.webmanifest">
   <link href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" rel="stylesheet">
   <script type="text/javascript" src="js/jsonfn.min.js"></script>
 </head>
 
 <body>
   <!-- Mapvar upload form  -->
-  <input type="file" id="actual-btn"/>
+  <input type="file" id="actual-btn" />
 
   <ul class="side-menu">
     <li><a href="./"><span class="fa fa-bars"></span>Clarity Level Player</a></li>
     <li><a href="#" onclick="saveToBrowser();"><span class="fas fa-file"></span>Save to Browser</a></li>
     <li><a href="#" onclick="loadFromBrowser();"><span class="fas fa-file-import"></span>Load from Browser</a></li>
-    <li><a href="#" onclick="exportMapvar()"><span class="fas fa-download"></span>Download Mapvar</a></li>
+    <li><a href="#" onclick="exportMapvar();"><span class="fas fa-download"></span>Download Mapvar</a></li>
     <li><a href="#"><span class="fa fa-upload"></span><label for="actual-btn">Import Mapvar</label></a></li></label>
     <li><a href="#"><span class="fas fa-toolbox"></span>Upload to Workshop</a></li>
-    <li><a href="#"><span class="fas fa-code"></span>Mapvar Customizer</a></li>
+    <li><a href="#" onclick="openCustomiser();"><span class="fas fa-code"></span>Mapvar Customizer</a></li>
     <li><a href="#"><span class="fas fa-cog"></span>Settings</a></li>
   </ul>
 
@@ -50,143 +49,9 @@
         return window.setTimeout(callback, 1000 / 60);
       };
 
-    function tooltip(text, callobj) {
-      document.querySelector("#tooltip").innerHTML = text;
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./js/ClaritySW.js');
     }
-
-    function untooltip(callobj) {
-      document.querySelector("#tooltip").innerHTML = window.map.keys[game.selectedTile].blockname;
-    }
-
-    function select(id, callobj) {
-      game.selectedTile = id;
-      // Set all other tiles in the select bar to unselected
-      var tiles = document.querySelectorAll(".tileOption");
-      for (var i = 0; i < tiles.length; i++) {
-        tiles[i].className = "tileOption unselected";
-      }
-      callobj.className = "tileOption";
-    }
-
-    function saveToBrowser() {
-      // Prompt the user for the level name
-      Swal.fire({
-        title: 'Save Level',
-        input: 'text',
-        inputLabel: 'Level Name',
-        inputPlaceholder: 'Enter a name for the level',
-        showCancelButton: true,
-        inputValidator: (value) => {
-          if (!value) {
-            return 'You need to write something!';
-          }
-        }
-      }).then((result) => {
-        if (result.isConfirmed) {
-          // Save the level to the browser
-          localStorage.setItem("mapsave-"+result.value, LZString.compressToBase64(JSONfn.stringify(window.map)));
-          game.log("[Editr] Saved map", "mapsave-"+result.value);
-          Swal.fire({
-            title: 'Level Saved!',
-            text: 'Your level has been saved to the browser.',
-            icon: 'success',
-            confirmButtonText: 'Kewl'
-          });
-        }
-      });
-    }
-
-    function loadFromBrowser() {
-      // Pop up a list of all available mapvar saves
-      var saves = [];
-      for (var i = 0; i < localStorage.length; i++) {
-        if (localStorage.key(i).startsWith("mapsave-")) {
-          saves.push(localStorage.key(i).replace("mapsave-", ""));
-        }
-      }
-      if (saves.length == 0) {
-        Swal.fire({
-          title: 'No Saves Found',
-          text: 'No saves were found in your browser.',
-          icon: 'error',
-          confirmButtonText: 'Ok'
-        });
-      } else {
-        Swal.fire({
-          title: 'Load Level',
-          input: 'select',
-          inputOptions: saves,
-          inputPlaceholder: 'Select a level to load',
-          showCancelButton: true,
-          inputValidator: (value) => {
-            if (!value) {
-              return 'You need to select something!';
-            }
-          }
-        }).then((result) => {
-          if (result.isConfirmed) {
-            // Load the level from the browser
-            game.log("[Editr] Attempting to load mapsave-"+saves[result.value]);
-            var jsonMap = JSONfn.parse(LZString.decompressFromBase64(localStorage.getItem("mapsave-"+saves[result.value])));
-            // Load the contents of jsonMap into window.map
-            for (var key in jsonMap){
-              window.map[key] = jsonMap[key];
-            }
-            game.log("[Editr] Got mapvar mapsave-"+saves[result.value]);
-            game.load_map(window.map);
-            Swal.fire({
-              title: 'Level Loaded!',
-              text: 'Your level has been loaded from the browser.',
-              icon: 'success',
-              confirmButtonText: 'Noice'
-            });
-          }
-        });
-      }
-    }
-
-    function readSingleFile(e) {
-        var file = e.target.files[0];
-        if (!file) {
-          return;
-        }
-        var reader = new FileReader();
-        reader.onload = function(e) {
-          var contents = e.target.result;
-          // Load the contents of the file into window.map
-          game.log("[Editr] Attempting to load mapvar at "+file.name);
-          var jsonMap = JSONfn.parse(contents);
-          for (var key in jsonMap){
-            window.map[key] = jsonMap[key];
-          }
-          game.load_map(window.map);
-        };
-        reader.readAsText(file);
-      };
-
-    function exportMapvar() {
-      var new_data = [];
-      var old_data = window.map.data;
-      for (var i = 0; i < old_data.length; i++) {
-        new_data.push([]);
-        for (var j = 0; j < old_data[i].length; j++) {
-          new_data[i].push(old_data[i][j].id);
-        }
-      }
-      var backupData = window.map.data;
-      window.map.data = new_data;
-      var map = JSONfn.stringify(window.map);
-      window.map.data = backupData;
-
-      var element = document.createElement('a');
-      element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(map));
-      element.setAttribute('download', "New Mapvar.clarity");
-      element.click();
-    }
-
-
-      document.getElementById('actual-btn')
-        .addEventListener('change', readSingleFile, false);
   </script>
 </body>
 
