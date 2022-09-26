@@ -242,16 +242,17 @@ Clarity.prototype.load_map = function (map) {
         });
     });
 
-    if (!this.checkpoint) {
-        if (!spawn_found) {
+    if (this.legacy_map) {
+        if (!this.checkpoint) {
+          if (!spawn_found) {
             this.current_map.player.x = 1
             this.current_map.player.y = 1
-        } else {
+          } else {
             this.current_map.player.x = spawnx;
             this.current_map.player.y = spawny;
+          }
         }
     }
-
 
     this.current_map.width_p = this.current_map.width * this.tile_size;
     this.current_map.height_p = this.current_map.height * this.tile_size;

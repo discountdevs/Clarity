@@ -142,3 +142,7 @@ input.toggle:checked + label::after {
 	left: 100%;
 	transform: translateX(-100%);
 }
+
+.swal2-container.swal2-backdrop-show, .swal2-container.swal2-noanimation {
+  backdrop-filter: blur(20px);
+}

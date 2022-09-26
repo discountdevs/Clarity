@@ -39,11 +39,26 @@ function init() {
                     `.replace("{src}", base64img).replace("{id}", tile.id).replace("{id}", tile.id).replace("{tilename}", tile.blockname);
                     tileBar.innerHTML = tileBar.innerHTML + htmlImg;
                 } else {
-                    game.log("[Editr] Warning: Tile " + tile.blockname + " has no image!");
+                    game.log("[Editr] Warning: Tile " + tile.blockname + " has no image, relying on colour only!");
+                    // Draw the image using the colour
+                    var htmlImg = `
+                    <div class="tileOption unselected" style="background-color: {colour}" onmouseover="tooltip('{tilename}', this);" onclick="select({id}, this);" onmouseleave="untooltip(this);" id="selectBlock{id}"></div>
+                    `.replace("{colour}", tile.colour).replace("{id}", tile.id).replace("{id}", tile.id).replace("{tilename}", tile.blockname);
+                    tileBar.innerHTML = tileBar.innerHTML + htmlImg;
                 }
             } else {
                 game.log("[Editr] Warning: Tile " + tile.id + " has no name!");
             }
+        });
+    }
+
+    regenerate_block_selectors = function () {
+        generate_block_selectors();
+        swal.fire ({
+            title: "Success!",
+            text: "Block selectors have been regenerated. If you are still experiencing desync between your mapvar and your block selectors, contact the Clarity discord for more information.",
+            icon: "success",
+            confirmButtonText: "Ok"
         });
     }
 
@@ -231,6 +246,66 @@ function exportMapvar() {
     element.click();
 }
 
+function resize_map(x, y, fillid) {
+    // Resize the map (can't use .length)
+    var old_data = window.map.data;
+    window.map.data = [];
+    for (var i = 0; i < x; i++) {
+        window.map.data.push([]);
+        for (var j = 0; j < y; j++) {
+            window.map.data[i].push(game.current_map.keys[fillid]);
+        }
+    }
+    // Copy the old data into the new data
+    for (var i = 0; i < old_data.length; i++) {
+        for (var j = 0; j < old_data[i].length; j++) {
+            if (i < x && j < y) {
+                window.map.data[i][j] = old_data[i][j];
+            }
+        }
+    }
+    game.load_map(window.map);
+}
+
+function resize_map_prompt() {
+    // Prompt the user for the id to fill with, x, and y
+    Swal.fire({
+        title: 'Resize Map',
+        html: '<input type="number" id="fillid" class="swal2-input" placeholder="Fill ID (Optional)"><br>' +
+            '<input type="number" id="x" class="swal2-input" placeholder="X">&nbsp;&nbsp;' +
+            '<input type="number" id="y" class="swal2-input" placeholder="Y">',
+        focusConfirm: false,
+        showCancelButton: true,
+        width: 600,
+        preConfirm: () => {
+            return {
+                fillid: document.getElementById('fillid').value || 0,
+                x: document.getElementById('x').value,
+                y: document.getElementById('y').value
+            }
+        }
+    }).then((result) => {
+        var x = result.value.x;
+        var y = result.value.y;
+        var fillid = result.value.fillid;
+        if (result.isConfirmed) {
+            // Confirm the action
+            Swal.fire({
+                title: 'Resize Map',
+                text: 'Are you sure you want to resize the map to ' + result.value.x + 'x' + result.value.y + '? This action is irreversible!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, resize it!',
+                cancelButtonText: 'No, nvm',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Resize the map
+                    resize_map(x, y, fillid);
+                }
+            });
+        }
+    });
+}
 
 document.getElementById('actual-btn')
     .addEventListener('change', readSingleFile, false);
@@ -238,23 +313,40 @@ document.getElementById('actual-btn')
 function openCustomiser() {
     // Opens a sweetalert2 modal with the mapvar customizer
     Swal.fire({
-        title: 'Mapvar Customizer',
+        title: 'Mapvar Customiser',
         html: `
-        <div class="container">
-            <input type="color" id="player_color" class="field-radio">
-            <label for="player_color" style="color:#fff">Player Color</label>
+        <div class="container" style="color:#fff">
+            <p>
+                Player Spawn Position (X, Y):  
+                <input type="number" style="width: 30px;" id="spawn-pos-x" class="form-control" placeholder="Spawn Position (X)" value="${game.current_map.player.x}">
+                <input type="number" style="width: 30px;" id="spawn-pos-y" class="form-control" placeholder="Spawn Position (Y)" value="${game.current_map.player.y}">
+            </p>
+            <p>
+                <label for="player_color">Player Colour: </label>
+                <input type="color" id="player_color" class="field-radio">
+            </p>
+            <p>
+                <button class="swal2-cancel swal2-styled" onclick="resize_map_prompt()">Resize Map</button>
+            </p>
+            <p>
+                <button class="swal2-cancel swal2-styled" onclick="regenerate_block_selectors()">Regenerate block selectors</button>
+            </p>
         </div>`,
         showCancelButton: true,
         confirmButtonText: 'Save',
+        width: 1000,
         cancelButtonText: 'Cancel',
         preConfirm: () => {
             var player_colour = document.getElementById("player_color").value;
+            var player_spawn_x = document.getElementById("spawn-pos-x").value;
+            var player_spawn_y = document.getElementById("spawn-pos-y").value;
+
             if (game.player_img) {
                 // Warn the user that the image takes precedence over the colour
                 Swal.fire({
                     title: 'Warning',
                     text: 'The player image takes precedence over the colour. Are you sure you want to continue and set the player colour?',
-                    type: 'warning',
+                    icon: 'warning',
                     showCancelButton: true,
                     confirmButtonText: 'Yes, save it!',
                     cancelButtonText: 'No, don\'t.'
@@ -262,7 +354,12 @@ function openCustomiser() {
                     if (result.isConfirmed) {
                         // Set the player colour
                         game.player.color = player_colour;
-                        game.current_map.color = player_colour;
+                        game.current_map.color = player_colour;                        
+                        // Set spawnpoint
+                        game.current_map.player.x = player_spawn_x;
+                        game.current_map.player.y = player_spawn_y;
+                        window.map.player.x = parseInt(player_spawn_x);
+                        window.map.player.y = parseInt(player_spawn_y);
                     }
                 });
             } else {
