@@ -18,5 +18,5 @@ A mapvar is a self-contained game. It contains textures, scripts, physics defini
 
 ### This page is still under construction.
 
-The new editor is currently availible for betatesting!
-> https://discountdevs.github.io/Clarity/editr.html
+The new editr and player are currently in alpha. In beta all features will be locked in, and once all bugs are fixed the final version will be released. You can test both of them at:
+> https://discountdevs.github.io/Clarity/
