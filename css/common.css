@@ -40,6 +40,8 @@ html {
 
 label{
   cursor: pointer;
+  width:100%;
+  height:100%;
 }
 
 /* side menu (stolen from codepen here: https://codepen.io/perikan/pen/LZKMJx) */
