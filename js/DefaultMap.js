@@ -611,7 +611,7 @@ var Mapvar = function () {
   /* Velocity limits */
 
   this.vel_limit = {
-    x: 12345676789,
+    x: 15.8,
     y: 15.8,
   };
 

@@ -372,8 +372,8 @@ function openCustomiser() {
         <div class="container" style="color:#fff">
             <p>
                 Player Spawn Position (X, Y):  
-                <input type="number" style="width: 30px;" id="spawn-pos-x" class="form-control" placeholder="Spawn Position (X)" value="${game.current_map.player.x}">
-                <input type="number" style="width: 30px;" id="spawn-pos-y" class="form-control" placeholder="Spawn Position (Y)" value="${game.current_map.player.y}">
+                <input type="number" style="width: 60px;" id="spawn-pos-x" class="form-control" placeholder="Spawn Position (X)" value="${game.current_map.player.x}">
+                <input type="number" style="width: 60px;" id="spawn-pos-y" class="form-control" placeholder="Spawn Position (Y)" value="${game.current_map.player.y}">
             </p>
             <p>
                 <label for="player_color">Player Colour: </label>
@@ -384,6 +384,26 @@ function openCustomiser() {
             </p>
             <p>
                 <button class="swal2-cancel swal2-styled" onclick="upload_sprite()">Upload Player Sprite</button>&nbsp;&nbsp;&nbsp;&nbsp;<button class="swal2-cancel swal2-styled" onclick="delete_sprite()">Remove Player Sprite</button>
+            </p>
+            <p>
+                Gravity (X, Y):  
+                <input type="number" style="width: 60px;" id="gravity-x" class="form-control" placeholder="Gravity (X)" value="${game.current_map.gravity.x}">
+                <input type="number" style="width: 60px;" id="gravity-y" class="form-control" placeholder="Gravity (Y)" value="${game.current_map.gravity.y}">
+            </p>
+            <p>
+                Velocity Limits (X, Y):  
+                <input type="number" style="width: 60px;" id="vel-limit-x" class="form-control" placeholder="Velocity Limit (X)" value="${game.current_map.vel_limit.x}">
+                <input type="number" style="width: 60px;" id="vel-limit-y" class="form-control" placeholder="Velocity Limit (Y)" value="${game.current_map.vel_limit.y}">
+            </p>
+            <p>
+                Movement Speed (Left, Right, Jump Height):  
+                <input type="number" style="width: 60px;" id="movement-left" class="form-control" placeholder="Right Speed" value="${game.current_map.movement_speed.left}">
+                <input type="number" style="width: 60px;" id="movement-right" class="form-control" placeholder="Left Speed" value="${game.current_map.movement_speed.right}">
+                <input type="number" style="width: 60px;" id="movement-jump" class="form-control" placeholder="Jump Height" value="${game.current_map.movement_speed.jump}">
+            </p>
+            <p>
+                Tile Size:
+                <input type="number" style="width: 60px;" id="tile-size" class="form-control" placeholder="Tile Size" value="${game.tile_size}">
             </p>
             <p>
                 <button class="swal2-cancel swal2-styled" onclick="regenerate_block_selectors()">Regenerate block selectors</button>
@@ -397,12 +417,20 @@ function openCustomiser() {
             var player_colour = document.getElementById("player_color").value;
             var player_spawn_x = document.getElementById("spawn-pos-x").value;
             var player_spawn_y = document.getElementById("spawn-pos-y").value;
+            var gravity_x = document.getElementById("gravity-x").value;
+            var gravity_y = document.getElementById("gravity-y").value;
+            var vel_limit_x = document.getElementById("vel-limit-x").value;
+            var vel_limit_y = document.getElementById("vel-limit-y").value;
+            var tile_size = document.getElementById("tile-size").value;
+            var movement_left = document.getElementById("movement-left").value;
+            var movement_right = document.getElementById("movement-right").value;
+            var movement_jump = document.getElementById("movement-jump").value;
 
             if (game.player_img) {
                 // Warn the user that the image takes precedence over the colour
                 Swal.fire({
                     title: 'Warning',
-                    text: 'The player image takes precedence over the colour. Are you sure you want to continue and set the player colour?',
+                    text: 'Are you sure you want to set the player colour? The player sprite takes precedence over the colour.',
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonText: 'Yes, save it!',
@@ -417,6 +445,21 @@ function openCustomiser() {
                         game.current_map.player.y = player_spawn_y;
                         window.map.player.x = parseInt(player_spawn_x);
                         window.map.player.y = parseInt(player_spawn_y);
+                        // Set gravity
+                        game.current_map.gravity.x = parseFloat(gravity_x);
+                        game.current_map.gravity.y = parseFloat(gravity_y);
+                        // Set vel limits
+                        game.current_map.vel_limit.x = parseFloat(vel_limit_x);
+                        game.current_map.vel_limit.y = parseFloat(vel_limit_y);
+                        // Set tile size
+                        game.tile_size = parseInt(tile_size);
+                        game.current_map.tile_size = parseInt(tile_size);
+                        // Set movement speed
+                        game.current_map.movement_speed.left = parseFloat(movement_left);
+                        game.current_map.movement_speed.right = parseFloat(movement_right);
+                        game.current_map.movement_speed.jump = parseFloat(movement_jump);
+
+                        game.log("[Editr] [Mapvar Customiser] Saved mapvar settings")
                     }
                 });
             } else {

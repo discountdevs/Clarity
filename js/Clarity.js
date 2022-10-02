@@ -291,21 +291,23 @@ Clarity.prototype.move_player = function () {
     Math.round(this.player.loc.y / this.tile_size)
   );
 
-  if (tile.boost && !this.universalSpeed) {
-    this.current_map.movement_speed.left = 1;
-    this.current_map.movement_speed.right = 1;
-  } else if (!this.universalSpeed) {
-    this.current_map.movement_speed = {
-      jump: 6,
-      left: 0.3,
-      right: 0.3
-    };
-  } else if (this.universalSpeed) {
-    this.current_map.movement_speed = {
-      jump: 10,
-      left: 10,
-      right: 10
-    };
+  if (this.legacy_map){
+    if (tile.boost && !this.universalSpeed) {
+      this.current_map.movement_speed.left = 1;
+      this.current_map.movement_speed.right = 1;
+    } else if (!this.universalSpeed) {
+      this.current_map.movement_speed = {
+        jump: 6,
+        left: 0.3,
+        right: 0.3
+      };
+    } else if (this.universalSpeed) {
+      this.current_map.movement_speed = {
+        jump: 10,
+        left: 10,
+        right: 10
+      };
+    }
   }
 
 
