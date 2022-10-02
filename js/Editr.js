@@ -307,6 +307,60 @@ function resize_map_prompt() {
     });
 }
 
+function upload_sprite() {
+    // Upload a sprite (png) from the user's computer, then console.log the base64 data
+    Swal.fire({
+        title: 'Upload Sprite',
+        html: '<input type="file" id="sprite" class="swal2-input" accept="image/png">',
+        focusConfirm: false,
+        showCancelButton: true,
+        width: 600,
+        preConfirm: () => {
+            return {
+                sprite: document.getElementById('sprite').files[0]
+            }
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Upload the sprite
+            var file = result.value.sprite;
+            if (!file) {
+                return;
+            }
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                var contents = e.target.result;
+                // Log the base64 data
+                game.log("[Editr] Loaded sprite " + file.name + " into base64");
+                // Set the player image to that sprite
+                var img = new Image();
+                img.src = contents;
+                game.player_img = img;
+                window.map.player_img = contents;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+}
+
+function delete_sprite() {
+    // Prompt the user to confirm the deletion of the sprite
+    Swal.fire({
+        title: 'Delete Sprite',
+        text: 'Are you sure you want to delete the player sprite? This action is irreversible!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, destroy the sprite!',
+        cancelButtonText: 'Wait...',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Delete the sprite
+            game.player_img = null;
+            window.map.player_img = null;
+        }
+    });
+}
+
 document.getElementById('actual-btn')
     .addEventListener('change', readSingleFile, false);
 
@@ -327,6 +381,9 @@ function openCustomiser() {
             </p>
             <p>
                 <button class="swal2-cancel swal2-styled" onclick="resize_map_prompt()">Resize Map</button>
+            </p>
+            <p>
+                <button class="swal2-cancel swal2-styled" onclick="upload_sprite()">Upload Player Sprite</button>&nbsp;&nbsp;&nbsp;&nbsp;<button class="swal2-cancel swal2-styled" onclick="delete_sprite()">Remove Player Sprite</button>
             </p>
             <p>
                 <button class="swal2-cancel swal2-styled" onclick="regenerate_block_selectors()">Regenerate block selectors</button>

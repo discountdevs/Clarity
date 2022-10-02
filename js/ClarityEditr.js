@@ -18,6 +18,8 @@ var Clarity = function () {
     this.isDrawing = false;
     this.isErasing = false;
 
+    this.fps = 0;
+
     this.viewport = {
         x: 200,
         y: 200
@@ -784,6 +786,18 @@ Clarity.prototype.update = function () {
 };
 
 Clarity.prototype.draw = function (context) {
+    // Calculate FPS
+    this.fps = Math.round(1000 / (performance.now() - this.last_update));
+    this.last_update = performance.now();
+
+    // Display FPS
+    context.fillStyle = "#fff";
+    context.font = "12px Arial";
+    context.fillText(
+        "FPS: " + this.fps,
+        20,
+        20
+    );
     this.draw_map(context, false);
     this.draw_player(context);
 

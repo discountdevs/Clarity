@@ -11,6 +11,9 @@ var Clarity = function () {
   this.checkpoint = false;
   this.legacy_map = true; // Legacy map by default
 
+  // FPS
+  this.fps = 0;
+
   this.viewport = {
     x: 200,
     y: 200
@@ -672,6 +675,9 @@ Clarity.prototype.update = function () {
 };
 
 Clarity.prototype.draw = function (context) {
+  // Calculate FPS
+  this.fps = Math.round(1000 / (performance.now() - this.last_update));
+  this.last_update = performance.now();
 
   this.draw_map(context, false);
   var _this = this;
@@ -686,6 +692,15 @@ Clarity.prototype.draw = function (context) {
   if (this.current_map.draw_hook) {
     this.current_map.draw_hook(context); // Run mapvar draw hook
   }
+
+  // Display FPS
+  context.fillStyle = "#fff";
+  context.font = "12px Arial";
+  context.fillText(
+    "FPS: " + this.fps,
+    20,
+    20
+  );
 };
 
 const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
