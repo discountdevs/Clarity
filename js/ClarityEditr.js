@@ -812,8 +812,8 @@ const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
 
 Clarity.prototype.detectBelow = function (id) {
     var map = this.current_map.data;
-    var playerX = Math.round(this.player.loc.x / 16);
-    var playerY = Math.round(this.player.loc.y / 16);
+    var playerX = Math.round(this.player.loc.x / this.tile_size);
+    var playerY = Math.round(this.player.loc.y / this.tile_size);
 
     if (playerY >= map.length - 1 || playerX >= map.length) {
         return false;
@@ -828,8 +828,8 @@ Clarity.prototype.detectBelow = function (id) {
 
 Clarity.prototype.detectSides = function (id) {
     var map = this.current_map.data;
-    var playerX = Math.round(this.player.loc.x / 16);
-    var playerY = Math.round(this.player.loc.y / 16);
+    var playerX = Math.round(this.player.loc.x / this.tile_size);
+    var playerY = Math.round(this.player.loc.y / this.tile_size);
 
     if (playerY >= map.length - 1 || playerX >= map.length - 1) {
         return false;
@@ -928,8 +928,8 @@ Clarity.prototype.onReleaseClick = function (e) {
 
 Clarity.prototype.isInside = function (id) {
     var map = this.current_map.data;
-    var playerX = Math.round(this.player.loc.x / 16);
-    var playerY = Math.round(this.player.loc.y / 16);
+    var playerX = Math.round(this.player.loc.x / this.tile_size);
+    var playerY = Math.round(this.player.loc.y / this.tile_size);
     if (playerY >= map.length || playerX >= map.length) {
         return false;
     } else if (playerY < 0 || playerX < 0) {
@@ -943,8 +943,8 @@ Clarity.prototype.isInside = function (id) {
 
 Clarity.prototype.getBelow = function () {
     var map = this.current_map.data;
-    var playerX = Math.round(this.player.loc.x / 16);
-    var playerY = Math.round(this.player.loc.y / 16);
+    var playerX = Math.round(this.player.loc.x / this.tile_size);
+    var playerY = Math.round(this.player.loc.y / this.tile_size);
 
     if (playerY >= map.length - 1 || playerX >= map.length) {
         return false;
