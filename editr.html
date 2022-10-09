@@ -27,11 +27,12 @@
     <li><a href="#" onclick="exportMapvar();"><span class="fas fa-download"></span>Download Mapvar</a></li>
     <li><a href="#" onclick="document.querySelector('#actual-btn').click();"><span class="fa fa-upload"></span><label for="actual-btn">Import Mapvar</label></a></li></label>
     <li><a href="#"><span class="fas fa-toolbox"></span>Upload to Workshop</a></li>
-    <li><a href="#" onclick="openCustomiser();"><span class="fas fa-code"></span>Mapvar Customiser</a></li>
+    <li><a href="#" onclick="openCustomiser();"><span class="fas fa-code"></span>Mapvar Customiser</a></li>Squ
     <li><a href="#"><span class="fas fa-cog"></span>Settings</a></li>
   </ul>
 
   <div id="tileSelectBar">
+    <div class="tileOption unselected right fal fa-vector-square"  style="color: white; font-size: 5.6vh; " onmouseover="tooltip('Square Tool', this);" onclick="game.square_tool_positions = [];game.square_tool_active = true;" onmouseleave="untooltip(this);" id="squareToolSelector"></div>
   </div>
 
   <span id="tooltip"></span>

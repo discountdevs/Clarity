@@ -22,7 +22,6 @@ function init() {
     generate_block_selectors = function () {
 
         var tileBar = document.querySelector("#tileSelectBar");
-        tileBar.innerHTML = "";
         var order = window.map.display_order;
         var keys = [];
 
@@ -120,7 +119,9 @@ function select(id, callobj) {
     // Set all other tiles in the select bar to unselected
     var tiles = document.querySelectorAll(".tileOption");
     for (var i = 0; i < tiles.length; i++) {
-        tiles[i].className = "tileOption unselected";
+        if (tiles[i].className != "tileOption unselected right fal fa-vector-square"){
+            tiles[i].className = "tileOption unselected";
+        }
     }
     callobj.className = "tileOption";
 }

@@ -36,7 +36,7 @@ var Mapvar = function () {
       id: 0,
       colour: "#333",
       solid: 0,
-      blockname: "NullPtrException on line 35, column 20 at 0x00000000", // Me, leave an easter egg? I would never.
+      blockname: "Void", // Me, leave an easter egg? I would never.
     },
     // Air
     {

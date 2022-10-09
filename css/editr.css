@@ -26,11 +26,19 @@
 }
 
 
+.right {
+  float: right;
+  /* padding */
+  padding-right: 4vh;
+  padding-top: 0.5vh;
+}
+
 .tileOption {
   display: inline-block;
   height: 6vh;
   width: 6vh;
   image-rendering: pixelated;
+  border: 0.2vh solid rgb(192, 192, 192, 0);
 }
 
 .tileOption.unselected:hover {
@@ -38,13 +46,12 @@
 }
 
 .tileOption:not(.unselected) {
-  /* Add a nice little border to the tile */
   border: 0.2vh solid rgb(192, 192, 192);
 }
 
 #tooltip {
   position: absolute;
-  bottom: 9%;
+  bottom: 10%;
   left: 1vh;
   color: white;
 }

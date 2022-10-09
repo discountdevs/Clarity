@@ -12,6 +12,8 @@ var Clarity = function () {
     this.deathmsgs = true; // Legacy var, not needed immediately
     this.checkpoint = false;
     this.legacy_map = true; // Legacy map by default
+    this.square_tool_active = false;
+    this.square_tool_positions = [];
 
     // Editr-Specific Gamevars
     this.selectedTile = 2;
@@ -579,7 +581,7 @@ Clarity.prototype.move_player = function () {
 };
 
 Clarity.prototype.handle_draw = function () {
-    if (this.isDrawing) {
+    if (this.isDrawing && !this.square_tool_active) {
         // This is where the canvas interaction is processed.
         let x = this.mouse.x;
         let y = this.mouse.y;
@@ -612,6 +614,8 @@ Clarity.prototype.handle_draw = function () {
 
         this.current_map.data[worldY][worldX] = this.current_map.keys[0]; // Void
     }
+
+
 }
 
 Clarity.prototype.update_player = function () {
@@ -806,6 +810,71 @@ Clarity.prototype.draw = function (context) {
     if (this.current_map.draw_hook) {
         this.current_map.draw_hook(context); // Run mapvar draw hook
     }
+
+    // This is where the canvas interaction is processed.
+    let x = this.mouse.x;
+    let y = this.mouse.y;
+    
+    var worldX = this.screenToWorldSpace(x, this.camera.x);
+    var worldY = this.screenToWorldSpace(y, this.camera.y);
+
+    if (this.isNegative(worldX) || this.isNegative(worldY)) {
+        return; // Don't let the user place blocks outside the array
+    }
+    if (worldY > this.current_map.data.length - 1 || worldX > this.current_map.data[0].length - 1) {
+        return; // Don't let the user place blocks outside the array
+    }
+
+    var t_x = (worldX * this.tile_size) - this.camera.x;
+    var t_y = (worldY * this.tile_size) - this.camera.y;
+
+    if (this.square_tool_active){
+        if (!(this.square_tool_positions.length >= 1)) {
+            this.draw_tile(t_x, t_y, {
+                colour: "rgba(200, 200, 255, 0.3)",
+            }, context);
+        }
+
+        if (this.square_tool_positions.length >= 1) {
+            // This is where the canvas interaction is processed.
+            let x = this.mouse.x;
+            let y = this.mouse.y;
+            
+            var worldX2 = this.screenToWorldSpace(x, this.camera.x);
+            var worldY2 = this.screenToWorldSpace(y, this.camera.y);
+
+            if (this.isNegative(worldX2) || this.isNegative(worldY2)) {
+                return; // Don't let the user place blocks outside the array
+            }
+            if (worldY2 > this.current_map.data.length - 1 || worldX2 > this.current_map.data[0].length - 1) {
+                return; // Don't let the user place blocks outside the array
+            }
+
+            // Fill a highlight box from the first click to the current mouse position
+
+            var x1 = this.square_tool_positions[0].x;
+            var y1 = this.square_tool_positions[0].y;
+
+            var x2 = worldX2;
+            var y2 = worldY2;
+            
+            var x_min = Math.min(x1, x2);
+            var x_max = Math.max(x1, x2);
+
+            var y_min = Math.min(y1, y2);
+            var y_max = Math.max(y1, y2);
+
+            for (var i = x_min; i <= x_max; i++) {
+                for (var j = y_min; j <= y_max; j++) {
+                    var t_x = (i * this.tile_size) - this.camera.x;
+                    var t_y = (j * this.tile_size) - this.camera.y;
+                    this.draw_tile(t_x, t_y, {
+                        colour: "rgba(200, 200, 255, 0.3)",
+                    }, context);
+                }
+            }
+        }
+    }
 };
 
 const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
@@ -913,8 +982,58 @@ Clarity.prototype.isNegative = function (num) {
 Clarity.prototype.onClick = function (e) {
     if (e.button === 0) {
         this.isDrawing = true;
+        if (this.square_tool_active){
+            if (this.square_tool_positions.length <= 1){
+                // This is where the canvas interaction is processed.
+                let x = this.mouse.x;
+                let y = this.mouse.y;
+                
+                var worldX = this.screenToWorldSpace(x, this.camera.x);
+                var worldY = this.screenToWorldSpace(y, this.camera.y);
+
+                if (this.isNegative(worldX) || this.isNegative(worldY)) {
+                    return; // Don't let the user place blocks outside the array
+                }
+                if (worldY > this.current_map.data.length - 1 || worldX > this.current_map.data[0].length - 1) {
+                    return; // Don't let the user place blocks outside the array
+                }
+
+                this.square_tool_positions.push({
+                    x: worldX,
+                    y: worldY
+                });
+
+                if (this.square_tool_positions.length >= 2) this.squareTool();
+
+            } else {
+                this.squareTool();
+            }
+        }
     } else if (e.button === 2) {
         this.isErasing = true;
+    }
+}
+
+Clarity.prototype.squareTool = function () {
+    this.square_tool_active = false;
+
+    // Fill the area between the two points in square_tool_positions with the selected tile
+    var x1 = this.square_tool_positions[0].x;
+    var y1 = this.square_tool_positions[0].y;
+
+    var x2 = this.square_tool_positions[1].x;
+    var y2 = this.square_tool_positions[1].y;
+
+    var minX = Math.min(x1, x2);
+    var maxX = Math.max(x1, x2);
+
+    var minY = Math.min(y1, y2);
+    var maxY = Math.max(y1, y2);
+
+    for (var x = minX; x <= maxX; x++){
+        for (var y = minY; y <= maxY; y++){
+            this.current_map.data[y][x] = this.current_map.keys[this.selectedTile];
+        }
     }
 }
 
