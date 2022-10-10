@@ -27,7 +27,7 @@ var Mapvar = function () {
   this.tile_size = 16; // Tilesize (in px)
 
   this.display_order = [
-    2, 6, 1, 23, 24, 5, 4, 13, 17, 18, 9, 3, 12, 15, 14, 10, 11, 20, 16, 8
+    2, 6, 1, 0, 23, 24, 5, 4, 13, 17, 18, 9, 3, 12, 15, 14, 10, 11, 20, 16, 8
   ]; // Order of the tiles in the bottom bar (editr v2 only)
 
   this.keys = [

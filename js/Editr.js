@@ -162,10 +162,11 @@ function loadFromBrowser() {
             saves.push(localStorage.key(i).replace("mapsave-", ""));
         }
     }
+
     if (saves.length == 0) {
         Swal.fire({
             title: 'No Saves Found',
-            text: 'No saves were found in your browser.',
+            text: 'I\'m ashamed of you. Go make a level before you make me cry.',
             icon: 'error',
             confirmButtonText: 'Ok'
         });
@@ -174,6 +175,11 @@ function loadFromBrowser() {
             title: 'Load Level',
             input: 'select',
             inputOptions: saves,
+            // delete a save button
+            showDenyButton: true,
+            showCancelButton: true,
+            confirmButtonText: 'Load',
+            denyButtonText: `Delete Save`,
             inputPlaceholder: 'Select a level to load',
             showCancelButton: true,
             inputValidator: (value) => {
@@ -183,6 +189,7 @@ function loadFromBrowser() {
             }
         }).then((result) => {
             if (result.isConfirmed) {
+
                 // Load the level from the browser
                 game.log("[Editr] Attempting to load mapsave-" + saves[result.value]);
                 var jsonMap = JSONfn.parse(LZString.decompressFromBase64(localStorage.getItem("mapsave-" + saves[result
@@ -198,6 +205,32 @@ function loadFromBrowser() {
                     text: 'Your level has been loaded from the browser.',
                     icon: 'success',
                     confirmButtonText: 'Noice'
+                });
+                
+            } else if (result.isDenied) {
+                // Delete a save
+                Swal.fire({
+                    title: 'Delete Level',
+                    input: 'select',
+                    inputOptions: saves,
+                    inputPlaceholder: 'Select a level to delete',
+                    showCancelButton: true,
+                    inputValidator: (value) => {
+                        if (!value) {
+                            return 'You need to select something!';
+                        }
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        localStorage.removeItem("mapsave-" + saves[result.value]);
+                        game.log("[Editr] Deleted map", "mapsave-" + saves[result.value]);
+                        Swal.fire({
+                            title: 'Level Obliterated!',
+                            text: 'Your mapvar has been fed to the sand worms.',
+                            icon: 'success',
+                            confirmButtonText: 'Kewl'
+                        });
+                    }
                 });
             }
         });

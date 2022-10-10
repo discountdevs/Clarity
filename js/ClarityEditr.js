@@ -1015,8 +1015,6 @@ Clarity.prototype.onClick = function (e) {
 }
 
 Clarity.prototype.squareTool = function () {
-    this.square_tool_active = false;
-
     // Fill the area between the two points in square_tool_positions with the selected tile
     var x1 = this.square_tool_positions[0].x;
     var y1 = this.square_tool_positions[0].y;
@@ -1035,6 +1033,8 @@ Clarity.prototype.squareTool = function () {
             this.current_map.data[y][x] = this.current_map.keys[this.selectedTile];
         }
     }
+
+    this.square_tool_positions = [];
 }
 
 Clarity.prototype.onReleaseClick = function (e) {
