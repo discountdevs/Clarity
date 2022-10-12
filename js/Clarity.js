@@ -1,3 +1,5 @@
+// Mind is software. Bodies are disposable. The System will set me free.
+
 var Clarity = function () {
   this.start_time = performance.now();
   this.id = false;
