@@ -52,6 +52,8 @@ function init() {
     }
 
     regenerate_block_selectors = function () {
+        var tileBar = document.querySelector("#tileSelectBar");
+        tileBar.innerHTML = `<div class="tileOption unselected right fal fa-vector-square"  style="color: white; font-size: 5.6vh; " onmouseover="tooltip('Square Tool', this);" onclick="game.square_tool_positions = [];game.square_tool_active = !game.square_tool_active;" onmouseleave="untooltip(this);" id="squareToolSelector"></div>`;
         generate_block_selectors();
         swal.fire ({
             title: "Success!",
@@ -255,6 +257,8 @@ function readSingleFile(e) {
         game.load_map(window.map);
         game.log("[Editr] Got mapvar at " + file.name);
         // Regenerate block selectors
+        var blockSelector = document.querySelector("#blockSelector");
+        blockSelector.innerHTML = "";
         generate_block_selectors();
     };
     reader.readAsText(file);
@@ -395,6 +399,73 @@ function delete_sprite() {
     });
 }
 
+function advanced_mode() {
+    var new_data = [];
+    var old_data = window.map.data;
+    for (var i = 0; i < old_data.length; i++) {
+        new_data.push([]);
+        for (var j = 0; j < old_data[i].length; j++) {
+            new_data[i].push(old_data[i][j].id);
+        }
+    }
+    var backupData = window.map.data;
+    window.map.data = new_data;
+    var map = JSONfn.stringify(window.map);
+    window.map.data = backupData;
+
+    var iframe = document.getElementById("advancedmode-iframe");
+    var win = iframe.contentWindow;
+    var doc = iframe.contentDocument;
+    win.setEditorValue(map);
+    document.getElementById("advancedmode-container").style.zIndex = "99999999";
+}
+
+function advanced_mode_close() {
+    document.getElementById("advancedmode-container").style.zIndex = "-99999999";
+    // prompt the user if they want to save
+    Swal.fire({
+        title: 'Save Changes?',
+        text: 'Do you want to save your changes?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Yes!',
+        cancelButtonText: 'Throw my changes away!',
+        denyButtonText: 'Take me back!',
+        showDenyButton: true,
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // save the changes
+            var iframe = document.getElementById("advancedmode-iframe");
+            var win = iframe.contentWindow;
+            var doc = iframe.contentDocument;
+
+            var map = win.getEditorValue();
+
+            game.log("[Editr] Attempting to load mapvar from advanced mode");
+            window.map = {};
+            var jsonMap = JSONfn.parse(map);
+            for (var key in jsonMap) {
+                window.map[key] = jsonMap[key];
+            }
+            game.load_map(window.map);
+            game.log("[Editr] Mapvar loaded successfully. Let's hope you didn't break anything!");
+            // Regenerate block selectors
+            var blockSelector = document.querySelector("#blockSelector");
+            blockSelector.innerHTML = "";
+            generate_block_selectors();
+
+        }
+        if (result.isDenied) {
+            // take the user back
+            document.getElementById("advancedmode-container").style.zIndex = "99999999";
+            return;
+        }
+        // close the advanced mode
+        document.getElementById("advancedmode-container").style.zIndex = "-99999999";
+    });
+    
+}
+
 document.getElementById('actual-btn')
     .addEventListener('change', readSingleFile, false);
 
@@ -439,8 +510,12 @@ function openCustomiser() {
                 Tile Size:
                 <input type="number" style="width: 60px;" id="tile-size" class="form-control" placeholder="Tile Size" value="${game.tile_size}">
             </p>
+            <p></p>
             <p>
                 <button class="swal2-cancel swal2-styled" onclick="regenerate_block_selectors()">Regenerate block selectors</button>
+            </p>
+            <p>
+                <button class="swal2-deny swal2-styled" onclick="advanced_mode()">Advanced Mode</button>
             </p>
         </div>`,
         showCancelButton: true,

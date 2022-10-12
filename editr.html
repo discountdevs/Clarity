@@ -11,6 +11,7 @@
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@4/dark.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/gh/pieroxy/lz-string@master/libs/lz-string.min.js"></script>
+  <script src="./js/monaco-editor/min/vs/loader.js"></script>
   <link rel="manifest" href="./clarity.webmanifest">
   <link href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" rel="stylesheet">
   <script type="text/javascript" src="js/jsonfn.min.js"></script>
@@ -19,6 +20,15 @@
 <body>
   <!-- Mapvar upload form  -->
   <input type="file" id="actual-btn" />
+
+  <!-- Advanced mode container, just an iframe pointing to advancedmode.html -->
+  <div id="advancedmode-container">
+    <iframe id="advancedmode-iframe" src="./advancedmode.html"></iframe>
+    <!-- Close button -->
+    <div id="advancedmode-close" onclick="advanced_mode_close()">
+      X
+    </div>
+  </div>
 
   <ul class="side-menu">
     <li><a href="./"><span class="fa fa-bars"></span>Clarity Level Player</a></li>

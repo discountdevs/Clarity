@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="./css/advancedmode.css">
+    <script src="https://unpkg.com/prettier@2.7.1/standalone.js"></script>
+    <script src="https://unpkg.com/prettier@2.7.1/parser-babel.js"></script>
+
+    <style>
+        .me {
+          height: 100vh;
+        }
+    </style>
+</head>
+<body>
+    <div class="me" id="container"></div>
+    <script src="./js/monaco-editor/min/vs/loader.js"></script>
+    <script>
+        require.config({ paths: { 'vs': './js/monaco-editor/min/vs' }})
+
+        require(["vs/editor/editor.main"], function () {
+          window.editor = monaco.editor.create(document.getElementById('container'), {
+            value: '{"error": "Mind is software. Bodies are disposable. The system will set me free."}',
+            language: 'json',
+            minimap: { enabled: true },
+            scrollBeyondLastLine: true,
+            theme: "vs-dark",
+          });
+        });
+
+        function getEditorValue() {
+          return editor.getValue();
+        }
+
+        function setEditorValue(value) {
+          editor.setValue(prettier.format(value, {
+            parser: "json",
+            plugins: prettierPlugins,
+          }));
+        }
+    </script>
+</body>
+</html>
