@@ -1,4 +1,5 @@
-// Abandon hope, all ye who enter here
+// Mind is software. Bodies are disposable. The System will set me free.
+
 var Clarity = function () {
     this.start_time = performance.now();
 

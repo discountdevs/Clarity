@@ -1,4 +1,5 @@
-// Cache Files //
+// Mind is software. Bodies are disposable. The System will set me free.
+
 const cacheName = 'ClarityV2';
 const appShellFiles = [
   // HTML

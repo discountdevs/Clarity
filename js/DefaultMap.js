@@ -1,3 +1,5 @@
+// Mind is software. Bodies are disposable. The System will set me free.
+
 var Mapvar = function () {
   // Defines the map's textures with base64
   this.textures = {

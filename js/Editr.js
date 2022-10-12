@@ -1,4 +1,4 @@
-// Abandon hope, all ye who enter here
+// Mind is software. Bodies are disposable. The System will set me free.
 
 function init() {
     createHiDPICanvas = function () {

@@ -11,9 +11,11 @@ Clarity is a platformer game engine for the future. It allows for the simple cre
 
 ## Okay, but what *is* a mapvar?
 
-A mapvar is a self-contained game. It contains textures, scripts, physics definitions, and much, much more. Mapvars can be published on the Workshop, and can then be played and reviewed by the community. The mapvar docs can be found [here]().
+A mapvar is a self-contained game. It contains textures, scripts, physics definitions, and much, much more. Mapvars can be published on the Workshop, and can then be played and reviewed by the community. The mapvar docs can be found [here](https://github.com/discountdevs/ClarityEngine/blob/main/docs/mapvar.md).
 
+## What happened to the workshop?
 
+The old (now obsolete) workshop was unsecure and unstable. It is currently being rewritten and we expect a working alpha version to be ready to publish in the coming weeks.
 
 
 ### This page is still under construction.
