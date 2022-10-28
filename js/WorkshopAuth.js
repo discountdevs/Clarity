@@ -1,17 +1,9 @@
 var WorkshopAuth = function () {
     this.workshop_instance = "https://ClarityWorkshopV2.n3rdl0rd.repl.co/";
-    this.update_status_on_load = true;
-
-    var _this = this;
-    document.addEventListener('DOMContentLoaded', function() {
-        if (_this.update_status_on_load) {
-            _this.on_load();
-        }
-    });
 }
 
 WorkshopAuth.prototype.on_load = function () {
-    if (this.login_status()){
+    if (this.login_status()) {
         $('#login').hide();
         $('#logout').show();
     }

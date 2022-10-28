@@ -47,6 +47,10 @@ function init() {
 
     window.renderInterval = setInterval(Loop, 16.7);
 
+    // Setup workshop auth
+    window.workshop = new WorkshopAuth();
+    workshop.on_load();
+
     // Configure upload
     function uploadHandler(e) {
         var file = e.target.files[0];
