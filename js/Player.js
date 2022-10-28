@@ -46,6 +46,29 @@ function init() {
     };
 
     window.renderInterval = setInterval(Loop, 16.7);
+
+    // Configure upload
+    function uploadHandler(e) {
+        var file = e.target.files[0];
+        if (!file) {
+          return;
+        }
+        var reader = new FileReader();
+        reader.onload = function (e) {
+          var contents = e.target.result;
+          // Load the contents of the file into window.map
+          game.log("[Editr] Attempting to load mapvar at " + file.name);
+          window.map = {};
+          var jsonMap = JSONfn.parse(contents);
+          for (var key in jsonMap) {
+            window.map[key] = jsonMap[key];
+          }
+          game.load_map(window.map);
+        };
+        reader.readAsText(file);
+    };
+  
+    document.getElementById('actual-btn').addEventListener('change', uploadHandler, false);
 }
 
 init();
