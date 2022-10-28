@@ -665,8 +665,9 @@ var Mapvar = function () {
       game.current_map.player.y = Math.round(game.player.loc.y / 16);
       game.checkpoint = true;
     },
+  }
 
-    jump_hook: function () {
+  this.jump_hook = function () {
       if (game.detectSides(18).result && !game.isGroundSolid()) {
         if (game.allow_special_jump) {
           game.allow_special_jump = false;
@@ -698,9 +699,9 @@ var Mapvar = function () {
       }
 
       game.player.can_jump = false;
-    },
+  }
 
-    update_hook: function () {
+  this.update_hook = function () {
       if (game.detectSides(18).result) {
         if (game.detectSides(18).side == "left" && game.key.left) {
           game.player.vel.y *= 0.8;
@@ -708,8 +709,7 @@ var Mapvar = function () {
           game.player.vel.y *= 0.8;
         }
       }
-    },
-  };
+  },
 
   this.background = "#222";
 
