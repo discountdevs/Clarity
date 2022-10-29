@@ -104,6 +104,10 @@ function init() {
     };
 
     window.renderInterval = setInterval(Loop, 16.7);
+
+    // Setup workshop auth
+    window.workshop = new WorkshopAuth();
+    workshop.on_load();
 }
 
 init();

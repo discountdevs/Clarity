@@ -69,7 +69,7 @@ WorkshopAuth.prototype.logout = function () {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
 
-    var data = { 'username': username };
+    var data = { 'username': this.active_user() };
     // Send the request to the server
     $.ajax({
         url: this.workshop_instance + 'logout',
