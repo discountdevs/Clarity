@@ -350,7 +350,6 @@ function resize_map_prompt() {
 }
 
 function upload_sprite() {
-    // Upload a sprite (png) from the user's computer, then console.log the base64 data
     Swal.fire({
         title: 'Upload Sprite',
         html: '<input type="file" id="sprite" class="swal2-input" accept="image/png">',

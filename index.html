@@ -29,11 +29,11 @@
     
     <li id="logout" style="display: none;"><a href="#" onclick="workshop.logout()"><span class="fas fa-sign-out"></span>Log Off</a></li>
     
-    <li><a href="#" onclick="alert('WIP')"><span class="fa-solid fa-toolbox"></span>Workshop</a></li>
+    <li><a href="#" onclick="workshopUI.show_level_list();"><span class="fa-solid fa-toolbox"></span>Workshop</a></li>
     
     <li><a href="#" onclick="document.querySelector('#actual-btn').click();"><span class="fa fa-upload"></span><label for="actual-btn">Import Mapvar</label></a></li>
     
-    <li><a href="#" onclick="alert('WIP')"><span class="fa fa-cog"></span>Settings</a></li>
+    <li><a href="#" onclick="Swal.fire('Settings are not functional yet.')"><span class="fa fa-cog"></span>Settings</a></li>
     
     <li style="position: fixed; bottom: 60px;"><a href="https://discord.gg/FbEJ2DyGME"><span
           class="fa-brands fa-discord"></span>Join our Discord</a></li>
@@ -46,6 +46,7 @@
 
   <script src="js/Clarity.js"></script>
   <script src="js/WorkshopAuth.js"></script>
+  <script src="js/WorkshopUI.js"></script>
   <script src="js/DefaultMap.js"></script>
   <script src="js/Player.js"></script>
   <script>

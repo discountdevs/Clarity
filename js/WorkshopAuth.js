@@ -21,6 +21,14 @@ WorkshopAuth.prototype.active_user = function () {
     }
 }
 
+WorkshopAuth.prototype.get_token = function () {
+    if (this.login_status()) {
+        return localStorage.getItem('token');
+    } else {
+        return false;
+    }
+}
+
 WorkshopAuth.prototype.login = function (username, password) {
     var data = {
         'username': username,
@@ -89,11 +97,93 @@ WorkshopAuth.prototype.switch_instance = function (instance) {
     return this.workshop_instance;
 }
 
+WorkshopAuth.prototype.upload_level = function (level, name, description) {
+    var data = {
+        'lvl': level,
+        'name': name,
+        'description': description,
+        'token': this.get_token(),
+    };
+
+    if (data.token === false) {
+        return false; // Ensure that the token is valid
+    }
+
+    $.ajax({
+        url: this.workshop_instance + 'add',
+        type: 'POST',
+        data: data,
+        success: function (data) {
+            if (data.success){
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Whoosh!',
+                    text: 'Your level has been folded into a paper airplane and passed along to the workshop.',
+                });
+            }
+        }
+    });
+
+    return true;
+}
+
+WorkshopAuth.prototype.list_all_levels = function (callback) {
+    $.ajax({
+        url: this.workshop_instance + 'listall',
+        type: 'GET',
+        success: function (data) {
+            callback(data);
+        }
+    });
+
+    return true;
+}
+
+WorkshopAuth.prototype.list_levels_page = function (callback, page) {
+    $.ajax({
+        url: this.workshop_instance + 'list/' + page,
+        type: 'GET',
+        success: function (data) {
+            callback(data);
+        }
+    });
+
+    return true;
+}
+
+WorkshopAuth.prototype.get_level = function (callback, id) {
+    $.ajax({
+        url: this.workshop_instance + 'lvl/' + id,
+        type: 'GET',
+        success: function (data) {
+            callback(data);
+        }
+    });
+
+    return true;
+}
+
+WorkshopAuth.prototype.check_instance_status = function (callback) {
+    $.ajax({
+        url: this.workshop_instance,
+        type: 'GET',
+        success: function (data) {
+            if (data === "Clarity Workshop OK") {
+                callback(true);
+            } else {
+                callback(false);
+            }
+        }
+    });
+    return true;
+}
+
 WorkshopAuth.prototype.show_signup_prompt = function () {
     Swal.fire({
         title: 'Sign up for the Clarity Workshop',
         html: `<input type="text" id="login-input" class="swal2-input" placeholder="Username">
-        <input type="password" id="password-input" class="swal2-input" placeholder="Password">`,
+        <input type="password" id="password-input" class="swal2-input" placeholder="Password"><br>
+        Already got an account? <a href="#" style="color:aqua;" onclick="workshop.show_login_prompt()">Login</a>`,
         confirmButtonText: 'Sign up',
         focusConfirm: false,
         preConfirm: () => {
@@ -122,7 +212,8 @@ WorkshopAuth.prototype.show_login_prompt = function () {
     Swal.fire({
         title: 'Login to the Clarity Workshop',
         html: `<input type="text" id="login-input" class="swal2-input" placeholder="Username">
-        <input type="password" id="password-input" class="swal2-input" placeholder="Password">`,
+        <input type="password" id="password-input" class="swal2-input" placeholder="Password">
+        No account? <a href="#" style="color:aqua;" onclick="workshop.show_signup_prompt()">Register</a>`,
         confirmButtonText: 'Sign in',
         focusConfirm: false,
         preConfirm: () => {
