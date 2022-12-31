@@ -163,6 +163,18 @@ WorkshopAuth.prototype.get_level = function (callback, id) {
     return true;
 }
 
+WorkshopAuth.prototype.get_level_meta = function (callback, id) {
+    $.ajax({
+        url: this.workshop_instance + 'lvlmeta/' + id,
+        type: 'GET',
+        success: function (data) {
+            callback(data);
+        }
+    });
+
+    return true;
+}
+
 WorkshopAuth.prototype.check_instance_status = function (callback) {
     $.ajax({
         url: this.workshop_instance,
