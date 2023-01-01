@@ -41,12 +41,12 @@ WorkshopUI.prototype.show_level_list = function () {
     var level_list = JSON.parse(data);
     var level_list_html = "";
     for (var i = 0; i < level_list.length; i++) {
-      level_list_html += "<li><a href='#' onclick='window.showLvlPage("+ level_list[i].id +");' id='level_" + level_list[i].id + "'>" + level_list[i].name + "</a></li>";
+      level_list_html += "<button class='swal2-cancel swal2-styled' onclick='window.showLvlPage("+ level_list[i].id +");' id='level_" + level_list[i].id + "'>" + level_list[i].name + "</button><br>";
     }
 
     Swal.fire({
       title: "Select a level",
-      html: "<ul>" + level_list_html + "</ul>",
+      html: level_list_html,
       showCancelButton: false,
       showConfirmButton: false,
       allowOutsideClick: true,
@@ -89,6 +89,7 @@ WorkshopUI.prototype.show_level = function (level_id) {
     Swal.fire({
       title: data.name,
       html: `
+      <p style="color: white;"><i>${data.description}</i></p>
       <p style="color: white;">Author: ${data.author}</p>
       <p style="color: white;">Level ID: ${data.id}</p>
       `,

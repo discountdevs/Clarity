@@ -38,7 +38,7 @@ var Mapvar = function () {
       id: 0,
       colour: "#333",
       solid: 0,
-      blockname: "Void", // Me, leave an easter egg? I would never.
+      blockname: "Void",
     },
     // Air
     {

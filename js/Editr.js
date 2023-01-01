@@ -391,7 +391,7 @@ function delete_sprite() {
         text: 'Are you sure you want to delete the player sprite? This action is irreversible!',
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonText: 'Yes, destroy the sprite!',
+        confirmButtonText: 'Incinerate it!',
         cancelButtonText: 'Wait...',
     }).then((result) => {
         if (result.isConfirmed) {
@@ -432,7 +432,7 @@ function advanced_mode_close() {
         icon: 'question',
         showCancelButton: true,
         confirmButtonText: 'Yes!',
-        cancelButtonText: 'Throw my changes away!',
+        cancelButtonText: 'Burn the changes!',
         denyButtonText: 'Take me back!',
         showDenyButton: true,
     }).then((result) => {
@@ -583,4 +583,43 @@ function openCustomiser() {
             document.getElementById('player_color').value = window.map.player.colour;
         },
     });
+}
+
+function openUploadPrompt() {
+    Swal.fire({
+        title: 'Upload a Level',
+        html: `
+        <div class="container" style="color:#fff">
+            <p>
+                Level Name
+                <input type="text" id="level-name" class="form-control" value="My Very Kewl Level">
+            </p>
+
+            <p>
+                Description
+                <input type="text" id="level-description" class="form-control" value="A very kewl level indeed.">
+            </p>
+        </div>`,
+        showCancelButton: true,
+        confirmButtonText: 'Upload',
+        width: 500,
+        cancelButtonText: 'Cancel'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            var new_data = [];
+            var old_data = window.map.data;
+            for (var i = 0; i < old_data.length; i++) {
+                new_data.push([]);
+                for (var j = 0; j < old_data[i].length; j++) {
+                    new_data[i].push(old_data[i][j].id);
+                }
+            }
+            var backupData = window.map.data;
+            window.map.data = new_data;
+            var map = JSONfn.stringify(window.map);
+            window.map.data = backupData;
+
+            workshop.upload_level(map, document.getElementById("level-name").value, document.getElementById("level-description").value);
+        }
+    }); 
 }

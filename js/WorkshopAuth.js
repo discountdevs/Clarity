@@ -114,13 +114,11 @@ WorkshopAuth.prototype.upload_level = function (level, name, description) {
         type: 'POST',
         data: data,
         success: function (data) {
-            if (data.success){
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Whoosh!',
-                    text: 'Your level has been folded into a paper airplane and passed along to the workshop.',
-                });
-            }
+            Swal.fire({
+                icon: 'success',
+                title: 'Whoosh!',
+                text: 'Your level has been folded into a paper airplane and passed along to the workshop.',
+            });
         }
     });
 
@@ -236,10 +234,10 @@ WorkshopAuth.prototype.show_login_prompt = function () {
                 Swal.showValidationMessage(`Enter a username and password, you buffoon!`);
             } else {
                 if (!login) {
-                    Swal.showValidationMessage(`We all know your username is longer than that.`);
+                    Swal.showValidationMessage(`Well, somebody pressed enter too soon.`);
                 }
                 if (!password) {
-                    Swal.showValidationMessage(`What. A. Loser. Your password is far too short!`);
+                    Swal.showValidationMessage(`What. A. Loser. Enter a fricking password.`);
                 }
             }
             return { login: login, password: password }
