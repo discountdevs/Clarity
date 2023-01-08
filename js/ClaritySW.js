@@ -19,8 +19,8 @@ const appShellFiles = [
   "../js/ClaritySW.js",
   "../js/DefaultMap.js",
   "../js/Editr.js",
-  "../js/jsonfn.min.js",
-  "../js/Script.js",
+  "../js/external/jsonfn.min.js",
+  "../js/Player.js",
   // External CDNs
   "https://cdn.jsdelivr.net/npm/sweetalert2@11",
   "https://cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@4/dark.css",
