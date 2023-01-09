@@ -15,10 +15,25 @@ A mapvar is a self-contained game. It contains textures, scripts, physics defini
 
 ## What happened to the workshop?
 
-The old (now obsolete) workshop was unsecure and unstable. It is currently being rewritten and we expect a working alpha version to be ready to publish in the coming weeks.
+The old (now obsolete) workshop was unsecure and unstable. It has been rewritten, and it now contains none of the original levels. Old levels will be ported over soon, and a utility will also be provided for you to convert your legacy maps to proper v2 mapvars.
 
+## What about the development workflow?
+
+If you wanna develop Clarity, fork the repo and clone it locally. Open it up in your favorite editor, and then open a terminal. If you're on windows, a tool is provided to spin up a server (requires `python3` to be installed):
+
+```bat
+ezhost
+```
+
+Or, if you're on Linux or MacOS, where `python3` should be preinstalled:
+
+```
+python3 -m http.server
+```
+
+Make the changes you want to make, then push to your fork. Open a PR and provide a description of what you changed, and it will be reviewed and merged.
 
 ### This page is still under construction.
 
-The new editr and player are currently in alpha. In beta all features will be locked in, and once all bugs are fixed the final version will be released. You can test both of them at:
+However, it is almost in a stable state that is ready for release. If you want to try it out, check the URL:
 > https://discountdevs.github.io/Clarity/
