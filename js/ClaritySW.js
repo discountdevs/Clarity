@@ -26,6 +26,7 @@ const appShellFiles = [
   "https://cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@4/dark.css",
   "https://cdn.jsdelivr.net/gh/pieroxy/lz-string@master/libs/lz-string.min.js",
   "https://cdn.jsdelivr.net/gh/hung1001/font-awesome-pro-v6@44659d9/css/all.min.css",
+  "https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"
 ];
 
 var log = function (message) {
