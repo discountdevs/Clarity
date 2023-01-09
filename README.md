@@ -15,10 +15,10 @@ A mapvar is a self-contained game. It contains textures, scripts, physics defini
 
 ## What happened to the workshop?
 
-The old (now obsolete) workshop was unsecure and unstable. It is currently being rewritten and we expect a working alpha version to be ready to publish in the coming weeks.
+The old (now obsolete) workshop was unsecure and unstable. It has been rewritten, and it now contains none of the original levels. Old levels will be ported over soon, and a utility will also be provided for you to convert your legacy maps to proper v2 mapvars.
 
 
 ### This page is still under construction.
 
-The new editr and player are currently in alpha. In beta all features will be locked in, and once all bugs are fixed the final version will be released. You can test both of them at:
+However, it is almost in a stable state that is ready for release. If you want to try it out, check the URL:
 > https://discountdevs.github.io/Clarity/
