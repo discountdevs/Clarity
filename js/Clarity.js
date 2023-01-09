@@ -15,10 +15,7 @@ var Clarity = function () {
 
   // FPS
   this.fps = 0;
-  this.delta_time = 0;
-  this.last_update = performance.now();
-  this.delta_updating = true;
-  
+
   this.viewport = {
     x: 200,
     y: 200
@@ -396,10 +393,8 @@ Clarity.prototype.move_player = function () {
   this.player.vel.x = Math.min(Math.max(this.player.vel.x, -this.current_map.vel_limit.x), this.current_map.vel_limit.x);
   this.player.vel.y = Math.min(Math.max(this.player.vel.y, -this.current_map.vel_limit.y), this.current_map.vel_limit.y);
 
-
-  this.player.loc.x += (this.player.vel.x * 60) * this.delta_time;
-  this.player.loc.y += (this.player.vel.y * 60) * this.delta_time;
-
+  this.player.loc.x += this.player.vel.x;
+  this.player.loc.y += this.player.vel.y;
 
   this.player.vel.x *= .9;
 
@@ -409,11 +404,11 @@ Clarity.prototype.move_player = function () {
 
     while (this.get_tile(Math.floor(this.player.loc.x / this.tile_size), y_near1).solid ||
       this.get_tile(Math.floor(this.player.loc.x / this.tile_size), y_near2).solid)
-      this.player.loc.x += 6 * this.delta_time;
+      this.player.loc.x += 0.1;
 
     while (this.get_tile(Math.ceil(this.player.loc.x / this.tile_size), y_near1).solid ||
       this.get_tile(Math.ceil(this.player.loc.x / this.tile_size), y_near2).solid)
-      this.player.loc.x -= 6 * this.delta_time;
+      this.player.loc.x -= 0.1;
 
     /* tile bounce */
 
@@ -434,11 +429,11 @@ Clarity.prototype.move_player = function () {
 
     while (this.get_tile(x_near1, Math.floor(this.player.loc.y / this.tile_size)).solid ||
       this.get_tile(x_near2, Math.floor(this.player.loc.y / this.tile_size)).solid)
-      this.player.loc.y += 6 * this.delta_time;
+      this.player.loc.y += 0.1;
 
     while (this.get_tile(x_near1, Math.ceil(this.player.loc.y / this.tile_size)).solid ||
       this.get_tile(x_near2, Math.ceil(this.player.loc.y / this.tile_size)).solid)
-      this.player.loc.y -= 6 * this.delta_time;
+      this.player.loc.y -= 0.1;
 
     /* tile bounce */
 
@@ -684,12 +679,9 @@ Clarity.prototype.update = function () {
 };
 
 Clarity.prototype.draw = function (context) {
-  // Calculate FPS and delta_time
-  if (this.delta_updating) this.fps = Math.round(1000 / (performance.now() - this.last_update));
-  if (this.delta_updating) this.delta_time = (performance.now() - this.last_update) / 1000;
-  if (this.delta_updating) this.last_update = performance.now();
-
-  if (!this.delta_updating) this.delta_time = 0; // If the delta time is not updating, set it to 0 to make the game freeze
+  // Calculate FPS
+  this.fps = Math.round(1000 / (performance.now() - this.last_update));
+  this.last_update = performance.now();
 
   this.draw_map(context, false);
   var _this = this;
@@ -766,7 +758,7 @@ Clarity.prototype.detectSides = function (id) {
     isDetected = true;
   }
 
-  var unroundX = this.player.loc.x / this.tile_size;
+  var unroundX = this.player.loc.x / 16;
 
   if (sideDetected == "right") {
     if (Math.round(unroundX + 0.6) == playerX + 1 && isDetected) {
