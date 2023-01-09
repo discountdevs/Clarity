@@ -76,6 +76,14 @@ function init() {
     reader.readAsText(file);
   };
 
+  document.addEventListener('visibilitychange', function (event) {
+    if (document.hidden) {
+        game.delta_updating = false; // Delta time is not updated when the tab is not active.
+    } else {
+        game.delta_updating = true;
+    }
+});
+
   document.getElementById('actual-btn').addEventListener('change', uploadHandler, false);
 }
 
