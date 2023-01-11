@@ -37,3 +37,4 @@ Make the changes you want to make, then push to your fork. Open a PR and provide
 
 However, it is almost in a stable state that is ready for release. If you want to try it out, check the URL:
 > https://discountdevs.github.io/Clarity/
+> Join the discord: https://discord.gg/FbEJ2DyGME
