@@ -538,10 +538,19 @@ Clarity.prototype.move_player = function () {
 
     }
 
+    // check if player moved more than one full tile in a single frame
+    if (Math.abs(this.player.loc.x - originalpos.x) > this.current_map.vel_limit.x) {
+        var throttled = this.player.loc.x - originalpos.x > 0 ? this.current_map.vel_limit.x : 0 - this.current_map.vel_limit.x;
+        this.player.loc.x = originalpos.x + throttled;
+        this.player.vel.x = throttled;
+    }
+    if (Math.abs(this.player.loc.y - originalpos.y) > this.current_map.vel_limit.y) {
+        var throttled = this.player.loc.y - originalpos.y > 0 ? this.current_map.vel_limit.y : 0 - this.current_map.vel_limit.y;
+        this.player.loc.y = originalpos.y + throttled;
+        this.player.vel.y = throttled;
+    }
+
     // adjust camera
-
-
-
     var c_x = Math.round(this.cam.loc.x - this.viewport.x / 2);
     var c_y = Math.round(this.cam.loc.y - this.viewport.y / 2);
     var x_dif = Math.abs(c_x - this.camera.x);
