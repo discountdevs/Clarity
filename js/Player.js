@@ -22,7 +22,7 @@ function init() {
   //Create canvas with the device resolution.
   var canvas = createHiDPICanvas();
   WebGL2D.enable(canvas); // adds "webgl-2d" context to canvas
-  ctx = canvas.getContext('webgl-2d'); // We use the webgl-2d context here from the canvas-webgl library.
+  ctx = canvas.getContext('2d'); // We use the webgl-2d context here from the canvas-webgl library.
 
   document.body.appendChild(canvas);
 
@@ -44,9 +44,11 @@ function init() {
     // Draw the game
     game.update();
     game.draw(ctx);
+    // Request a new animation frame
+    requestAnimationFrame(Loop);
   };
 
-  window.renderInterval = setInterval(Loop, 16.7);
+  requestAnimationFrame(Loop);
 
   // Setup workshop auth
   window.workshop = new WorkshopAuth();

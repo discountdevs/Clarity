@@ -15,6 +15,7 @@ var Clarity = function () {
 
   // FPS
   this.fps = 0;
+  this.delta_time = 0;
 
   this.viewport = {
     x: 200,
@@ -393,10 +394,31 @@ Clarity.prototype.move_player = function () {
   this.player.vel.x = Math.min(Math.max(this.player.vel.x, -this.current_map.vel_limit.x), this.current_map.vel_limit.x);
   this.player.vel.y = Math.min(Math.max(this.player.vel.y, -this.current_map.vel_limit.y), this.current_map.vel_limit.y);
 
-  this.player.loc.x += this.player.vel.x;
-  this.player.loc.y += this.player.vel.y;
+  var compensated_movement_x = (this.player.vel.x * 60) * this.delta_time;
+  var compensated_movement_y = (this.player.vel.y * 60 ) * this.delta_time;
 
-  this.player.vel.x *= .9;
+  if (compensated_movement_x == NaN) {
+    compensated_movement_x = 0;
+  }
+  if (compensated_movement_y == NaN) {
+    compensated_movement_y = 0;
+  }
+
+  console.log("delta time: ", this.delta_time)
+  console.log("movement: ", compensated_movement_x, compensated_movement_y)
+  console.log("location: ", this.player.loc.x, this.player.loc.y)
+
+  this.player.loc.x += compensated_movement_x;
+  this.player.loc.y += compensated_movement_y;
+
+  if (this.player.loc.x == NaN) {
+    this.player.loc.x = this.current_map.player.x;
+  }
+  if (this.player.loc.y == NaN) {
+    this.player.loc.y = this.current_map.player.y;
+  }
+
+  this.player.vel.x *= .9; // slow down the player over time to prevent infinite sliding/acceleration
 
   if (left1.solid || left2.solid || right1.solid || right2.solid) {
 
@@ -680,7 +702,13 @@ Clarity.prototype.update = function () {
 
 Clarity.prototype.draw = function (context) {
   // Calculate FPS
+  if (!this.last_update) {
+    this.last_update = performance.now();
+  }
+
   this.fps = Math.round(1000 / (performance.now() - this.last_update));
+  this.delta_time = (performance.now() - this.last_update) / 1000;
+  console.log("calculated delta time at " + this.delta_time + " seconds")
   this.last_update = performance.now();
 
   this.draw_map(context, false);
