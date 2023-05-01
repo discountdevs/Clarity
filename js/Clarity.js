@@ -496,10 +496,12 @@ Clarity.prototype.move_player = function () {
 
   // check if player moved more than one full tile in a single frame
   if (Math.abs(this.player.loc.x - originalpos.x) > this.current_map.vel_limit.x) {
-    this.player.loc.x = originalpos.x;
+    var throttled = this.player.loc.x - originalpos.x > 0 ? this.current_map.vel_limit.x : 0 - this.current_map.vel_limit.x;
+    this.player.loc.x = originalpos.x + throttled;
   }
   if (Math.abs(this.player.loc.y - originalpos.y) > this.current_map.vel_limit.y) {
-    this.player.loc.y = originalpos.y;
+    var throttled = this.player.loc.y - originalpos.y > 0 ? this.current_map.vel_limit.y : 0 - this.current_map.vel_limit.y;
+    this.player.loc.y = originalpos.y + throttled;
   }
 
   // adjust camera
