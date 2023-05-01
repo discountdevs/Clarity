@@ -649,7 +649,6 @@ var Mapvar = function () {
       game.current_map.keys[10].img = "locked";
       window.timemillis = performance.now() - window.start_time;
       window.start_time = performance.now();
-      exitFullscreen();
     },
     death: function () {
       game.load_map(window.map);

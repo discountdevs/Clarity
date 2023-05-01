@@ -22,6 +22,7 @@ var Clarity = function () {
     this.isErasing = false;
 
     this.fps = 0;
+    this.delta_time = 0;
 
     this.viewport = {
         x: 200,
@@ -447,8 +448,37 @@ Clarity.prototype.move_player = function () {
     this.player.vel.x = Math.min(Math.max(this.player.vel.x, -this.current_map.vel_limit.x), this.current_map.vel_limit.x);
     this.player.vel.y = Math.min(Math.max(this.player.vel.y, -this.current_map.vel_limit.y), this.current_map.vel_limit.y);
 
-    this.player.loc.x += this.player.vel.x;
-    this.player.loc.y += this.player.vel.y;
+    var compensated_movement_x = this.player.vel.x * 60 * this.delta_time;
+    var compensated_movement_y = this.player.vel.y * 60 * this.delta_time;
+  
+    if (compensated_movement_x == NaN) {
+      compensated_movement_x = 0;
+    }
+    if (compensated_movement_y == NaN) {
+      compensated_movement_y = 0;
+    }
+  
+    // we want to move the player in steps to prevent overlapping, the checks below are just some extra redundancy in case the player breaks something
+    var numStepsX = Math.ceil(Math.abs(compensated_movement_x) / this.tile_size);
+    var numStepsY = Math.ceil(Math.abs(compensated_movement_y) / this.tile_size);
+    var stepX = compensated_movement_x / numStepsX;
+    var stepY = compensated_movement_y / numStepsY;
+  
+    var originalpos = {
+      x: this.player.loc.x,
+      y: this.player.loc.y,
+    };
+  
+    for (var i = 0; i < numStepsX; i++) {
+      if (!this.get_tile(Math.floor((this.player.loc.x + stepX) / this.tile_size)).solid) {
+        this.player.loc.x += stepX;
+      }
+    }
+    for (var i = 0; i < numStepsY; i++) {
+      if (!this.get_tile(Math.floor((this.player.loc.y + stepY) / this.tile_size)).solid) {
+        this.player.loc.y += stepY;
+      }
+    }
 
     this.player.vel.x *= .9;
 
@@ -458,11 +488,11 @@ Clarity.prototype.move_player = function () {
 
         while (this.get_tile(Math.floor(this.player.loc.x / this.tile_size), y_near1).solid ||
             this.get_tile(Math.floor(this.player.loc.x / this.tile_size), y_near2).solid)
-            this.player.loc.x += 0.1;
+            this.player.loc.x += (0.1 * 60) * this.delta_time;
 
         while (this.get_tile(Math.ceil(this.player.loc.x / this.tile_size), y_near1).solid ||
             this.get_tile(Math.ceil(this.player.loc.x / this.tile_size), y_near2).solid)
-            this.player.loc.x -= 0.1;
+            this.player.loc.x -= (0.1 * 60) * this.delta_time;
 
         /* tile bounce */
 
@@ -483,11 +513,11 @@ Clarity.prototype.move_player = function () {
 
         while (this.get_tile(x_near1, Math.floor(this.player.loc.y / this.tile_size)).solid ||
             this.get_tile(x_near2, Math.floor(this.player.loc.y / this.tile_size)).solid)
-            this.player.loc.y += 0.1;
+            this.player.loc.y += (0.1 * 60) * this.delta_time;
 
         while (this.get_tile(x_near1, Math.ceil(this.player.loc.y / this.tile_size)).solid ||
             this.get_tile(x_near2, Math.ceil(this.player.loc.y / this.tile_size)).solid)
-            this.player.loc.y -= 0.1;
+            this.player.loc.y -= (0.1 * 60) * this.delta_time;
 
         /* tile bounce */
 
@@ -794,23 +824,32 @@ Clarity.prototype.update = function () {
 
 Clarity.prototype.draw = function (context) {
     // Calculate FPS
+    if (!this.last_update) {
+      this.last_update = performance.now();
+    }
+  
     this.fps = Math.round(1000 / (performance.now() - this.last_update));
+    this.delta_time = (performance.now() - this.last_update) / 1000;
     this.last_update = performance.now();
-
+  
+    this.draw_map(context, false);
+    var _this = this;
+    for (const username in _this.current_lobby) {
+      if (username != signedin()) {
+        var pos = _this.current_lobby[username];
+        _this.draw_other_player(context, pos.x, pos.y, username);
+      }
+    }
+    this.draw_player(context);
+  
+    if (this.current_map.draw_hook) {
+      this.current_map.draw_hook(context); // Run mapvar draw hook
+    }
+  
     // Display FPS
     context.fillStyle = "#fff";
     context.font = "12px Arial";
-    context.fillText(
-        "FPS: " + this.fps,
-        20,
-        20
-    );
-    this.draw_map(context, false);
-    this.draw_player(context);
-
-    if (this.current_map.draw_hook) {
-        this.current_map.draw_hook(context); // Run mapvar draw hook
-    }
+    context.fillText("FPS: " + this.fps, 20, 20);
 
     // This is where the canvas interaction is processed.
     let x = this.mouse.x;
