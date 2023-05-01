@@ -1,9 +1,10 @@
 # Clarity
+
 Clarity (v2): The Modern, Moddable Platformer! (WIP)
 
-Ok, Ok. I know what you're thinking. You're thinking, "What happened to the old Clarity?", which is a fair question. I'll answer that quickly: After a game engine rework, Clarity (Legacy) is now an archived project and will not recieve any further updates. 
-Clarity legacy can be found at: 
-https://github.com/discountdevs/Clarity-Legacy
+Ok, Ok. I know what you're thinking. You're thinking, "What happened to the old Clarity?", which is a fair question. I'll answer that quickly: After a game engine rework, Clarity (Legacy) is now an archived project and will not recieve any further updates.
+Clarity legacy can be found at:
+<https://github.com/discountdevs/Clarity-Legacy>
 
 ## What is Clarity?
 
@@ -27,14 +28,14 @@ ezhost
 
 Or, if you're on Linux or MacOS, where `python3` should be preinstalled:
 
-```
+```sh
 python3 -m http.server
 ```
 
 Make the changes you want to make, then push to your fork. Open a PR and provide a description of what you changed, and it will be reviewed and merged.
 
-### This page is still under construction.
+### This page is still under construction
 
 However, it is almost in a stable state that is ready for release. If you want to try it out, check the URL:
-> https://discountdevs.github.io/Clarity/
-> Join the discord: https://discord.gg/FbEJ2DyGME
+> <https://discountdevs.github.io/Clarity/>
+> Join the discord: <https://discord.gg/FbEJ2DyGME>
