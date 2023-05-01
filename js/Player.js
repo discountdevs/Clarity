@@ -22,7 +22,7 @@ function init() {
   //Create canvas with the device resolution.
   var canvas = createHiDPICanvas();
   WebGL2D.enable(canvas); // adds "webgl-2d" context to canvas
-  ctx = canvas.getContext('2d'); // We use the webgl-2d context here from the canvas-webgl library.
+  ctx = canvas.getContext('webgl-2d'); // We use the webgl-2d context here from the canvas-webgl library.
 
   document.body.appendChild(canvas);
 
