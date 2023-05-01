@@ -15,7 +15,7 @@ A mapvar is a self-contained game. It contains textures, scripts, physics defini
 
 ## What happened to the workshop?
 
-The old (now obsolete) workshop was unsecure and unstable. It has been rewritten, and it now contains none of the original levels. Old levels will be ported over soon, and a utility will also be provided for you to convert your legacy maps to proper v2 mapvars.
+The old (now obsolete) workshop was unsecure and unstable. It has been rewritten, and it now contains none of the original levels. If you'd like to convert your old levels to the new format, you can use [Legacy2Mapvar](https://discountdevs.github.io/Legacy2Mapvar/) to convert them, either from the original level share code (commonly referred to as the "clipboard code") or from the level ID, if it was published to the workshop.
 
 ## What about the development workflow?
 

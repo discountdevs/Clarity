@@ -550,13 +550,13 @@ Clarity.prototype.move_player = function () {
 
   if (this.last_tile != tile.id && tile.script) {
     if (this.legacy_map) {
-      // Unsecure, needs patches
+      // Unsecure, could be XSS'd
       this.error("You're using legacy mapvar format, please update your map!");
       eval(this.current_map.scripts[tile.script]);
     } else {
       this.current_map.scripts[tile.script]();
     }
-  }
+  }A
 
   this.last_tile = tile.id;
 };
