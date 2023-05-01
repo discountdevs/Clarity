@@ -498,11 +498,14 @@ Clarity.prototype.move_player = function () {
   if (Math.abs(this.player.loc.x - originalpos.x) > this.current_map.vel_limit.x) {
     var throttled = this.player.loc.x - originalpos.x > 0 ? this.current_map.vel_limit.x : 0 - this.current_map.vel_limit.x;
     this.player.loc.x = originalpos.x + throttled;
+    this.player.vel.x = throttled;
   }
   if (Math.abs(this.player.loc.y - originalpos.y) > this.current_map.vel_limit.y) {
     var throttled = this.player.loc.y - originalpos.y > 0 ? this.current_map.vel_limit.y : 0 - this.current_map.vel_limit.y;
     this.player.loc.y = originalpos.y + throttled;
+    this.player.vel.y = throttled;
   }
+  
 
   // adjust camera
 
