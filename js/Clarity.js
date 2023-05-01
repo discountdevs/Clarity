@@ -394,12 +394,29 @@ Clarity.prototype.move_player = function () {
     compensated_movement_y = 0;
   }
 
-  console.log("delta time: ", this.delta_time);
-  console.log("movement: ", compensated_movement_x, compensated_movement_y);
-  console.log("location: ", this.player.loc.x, this.player.loc.y);
+  // we want to move the player in steps to prevent overlapping, the checks below are just some extra redundancy in case the player breaks something
+  var numStepsX = Math.ceil(Math.abs(compensated_movement_x) / this.tile_size);
+  var numStepsY = Math.ceil(Math.abs(compensated_movement_y) / this.tile_size);
+  var stepX = compensated_movement_x / numStepsX;
+  var stepY = compensated_movement_y / numStepsY;
 
-  this.player.loc.x += compensated_movement_x;
-  this.player.loc.y += compensated_movement_y;
+  var originalpos = {
+    x: this.player.loc.x,
+    y: this.player.loc.y,
+  };
+
+  for (var i = 0; i < numStepsX; i++) {
+    if (!this.get_tile(Math.floor((this.player.loc.x + stepX) / this.tile_size)).solid) {
+      this.player.loc.x += stepX;
+    }
+  }
+  for (var i = 0; i < numStepsY; i++) {
+    if (!this.get_tile(Math.floor((this.player.loc.y + stepY) / this.tile_size)).solid) {
+      this.player.loc.y += stepY;
+    }
+  }
+
+
 
   if (this.player.loc.x == NaN) {
     this.player.loc.x = this.current_map.player.x;
@@ -419,7 +436,7 @@ Clarity.prototype.move_player = function () {
       this.get_tile(Math.floor(this.player.loc.x / this.tile_size), y_near2)
         .solid
     )
-      this.player.loc.x += 0.1;
+      this.player.loc.x += (0.1 * 60) * this.delta_time;
 
     while (
       this.get_tile(Math.ceil(this.player.loc.x / this.tile_size), y_near1)
@@ -427,7 +444,7 @@ Clarity.prototype.move_player = function () {
       this.get_tile(Math.ceil(this.player.loc.x / this.tile_size), y_near2)
         .solid
     )
-      this.player.loc.x -= 0.1;
+      this.player.loc.x -= (0.1 * 60) * this.delta_time;
 
     /* tile bounce */
 
@@ -450,7 +467,7 @@ Clarity.prototype.move_player = function () {
       this.get_tile(x_near2, Math.floor(this.player.loc.y / this.tile_size))
         .solid
     )
-      this.player.loc.y += 0.1;
+      this.player.loc.y += (0.1 * 60) * this.delta_time;
 
     while (
       this.get_tile(x_near1, Math.ceil(this.player.loc.y / this.tile_size))
@@ -458,7 +475,7 @@ Clarity.prototype.move_player = function () {
       this.get_tile(x_near2, Math.ceil(this.player.loc.y / this.tile_size))
         .solid
     )
-      this.player.loc.y -= 0.1;
+      this.player.loc.y -= (0.1 * 60) * this.delta_time;
 
     /* tile bounce */
 
@@ -475,6 +492,14 @@ Clarity.prototype.move_player = function () {
       this.player.on_floor = true;
       this.player.can_jump = true;
     }
+  }
+
+  // check if player moved more than one full tile in a single frame
+  if (Math.abs(this.player.loc.x - originalpos.x) > this.current_map.vel_limit.x) {
+    this.player.loc.x = originalpos.x;
+  }
+  if (Math.abs(this.player.loc.y - originalpos.y) > this.current_map.vel_limit.y) {
+    this.player.loc.y = originalpos.y;
   }
 
   // adjust camera
@@ -707,7 +732,6 @@ Clarity.prototype.draw = function (context) {
 
   this.fps = Math.round(1000 / (performance.now() - this.last_update));
   this.delta_time = (performance.now() - this.last_update) / 1000;
-  console.log("calculated delta time at " + this.delta_time + " seconds");
   this.last_update = performance.now();
 
   this.draw_map(context, false);
