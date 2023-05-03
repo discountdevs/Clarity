@@ -556,7 +556,7 @@ Clarity.prototype.move_player = function () {
     } else {
       this.current_map.scripts[tile.script]();
     }
-  }A
+  }
 
   this.last_tile = tile.id;
 };
