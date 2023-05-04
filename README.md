@@ -1,6 +1,6 @@
 # Clarity
 
-Clarity (v2): The Modern, Moddable Platformer! (WIP)
+Clarity (v2): The Modern, Moddable Platformer!
 
 Ok, Ok. I know what you're thinking. You're thinking, "What happened to the old Clarity?", which is a fair question. I'll answer that quickly: After a game engine rework, Clarity (Legacy) is now an archived project and will not recieve any further updates.
 Clarity legacy can be found at:
