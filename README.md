@@ -26,11 +26,13 @@ If you wanna develop Clarity, fork the repo and clone it locally. Open it up in 
 ezhost
 ```
 
-Or, if you're on Linux or MacOS, where `python3` should be preinstalled:
+Or, if you're on Linux, where `python3` should be preinstalled:
 
 ```sh
 python3 -m http.server
 ```
+
+On mac, you can follow the same instructions as for Linux, just install Python through Homebrew first.
 
 Make the changes you want to make, then push to your fork. Open a PR and provide a description of what you changed, and it will be reviewed and merged.
 
