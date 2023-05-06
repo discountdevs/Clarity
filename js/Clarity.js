@@ -1,7 +1,32 @@
 // Mind is software. Bodies are disposable. The System will set me free.
 
+// Utils
+
+// makeSafeEval - taken from https://github.com/carloslfu/cross-safe-eval/
+var globals = Object.getOwnPropertyNames(this);
+
+function makeSafeEval(include) {
+  var clearGlobals = "";
+  for (var i = 0, len = globals.length; i < len; i++) {
+    if ((include && include.indexOf(globals[i]) === -1) || !include) {
+      clearGlobals += "var " + globals[i] + " = undefined;";
+    }
+  }
+  return function (operation) {
+    var globals = undefined; // out of scope for operation
+    return eval(
+      "(function () {" +
+        clearGlobals +
+        ";return " +
+        operation.replace("this", "_this") +
+        "})()"
+    );
+  };
+}
+
 var Clarity = function () {
   this.start_time = performance.now();
+
   this.id = false;
   this.alert_errors = false;
   this.log_info = true;
@@ -241,14 +266,6 @@ Clarity.prototype.draw_tile = function (x, y, tile, context) {
       );
     }
   }
-
-  // context.fillStyle = tile.colour;
-  // context.fillRect(
-  //   x,
-  //   y,
-  //   this.tile_size,
-  //   this.tile_size
-  // );
 };
 
 Clarity.prototype.draw_map = function (context, fore) {
@@ -406,17 +423,21 @@ Clarity.prototype.move_player = function () {
   };
 
   for (var i = 0; i < numStepsX; i++) {
-    if (!this.get_tile(Math.floor((this.player.loc.x + stepX) / this.tile_size)).solid) {
+    if (
+      !this.get_tile(Math.floor((this.player.loc.x + stepX) / this.tile_size))
+        .solid
+    ) {
       this.player.loc.x += stepX;
     }
   }
   for (var i = 0; i < numStepsY; i++) {
-    if (!this.get_tile(Math.floor((this.player.loc.y + stepY) / this.tile_size)).solid) {
+    if (
+      !this.get_tile(Math.floor((this.player.loc.y + stepY) / this.tile_size))
+        .solid
+    ) {
       this.player.loc.y += stepY;
     }
   }
-
-
 
   if (this.player.loc.x == NaN) {
     this.player.loc.x = this.current_map.player.x;
@@ -436,7 +457,7 @@ Clarity.prototype.move_player = function () {
       this.get_tile(Math.floor(this.player.loc.x / this.tile_size), y_near2)
         .solid
     )
-      this.player.loc.x += (0.1 * 60) * this.delta_time;
+      this.player.loc.x += 0.1 * 60 * this.delta_time;
 
     while (
       this.get_tile(Math.ceil(this.player.loc.x / this.tile_size), y_near1)
@@ -444,7 +465,7 @@ Clarity.prototype.move_player = function () {
       this.get_tile(Math.ceil(this.player.loc.x / this.tile_size), y_near2)
         .solid
     )
-      this.player.loc.x -= (0.1 * 60) * this.delta_time;
+      this.player.loc.x -= 0.1 * 60 * this.delta_time;
 
     /* tile bounce */
 
@@ -467,7 +488,7 @@ Clarity.prototype.move_player = function () {
       this.get_tile(x_near2, Math.floor(this.player.loc.y / this.tile_size))
         .solid
     )
-      this.player.loc.y += (0.1 * 60) * this.delta_time;
+      this.player.loc.y += 0.1 * 60 * this.delta_time;
 
     while (
       this.get_tile(x_near1, Math.ceil(this.player.loc.y / this.tile_size))
@@ -475,7 +496,7 @@ Clarity.prototype.move_player = function () {
       this.get_tile(x_near2, Math.ceil(this.player.loc.y / this.tile_size))
         .solid
     )
-      this.player.loc.y -= (0.1 * 60) * this.delta_time;
+      this.player.loc.y -= 0.1 * 60 * this.delta_time;
 
     /* tile bounce */
 
@@ -495,17 +516,26 @@ Clarity.prototype.move_player = function () {
   }
 
   // check if player moved more than one full tile in a single frame
-  if (Math.abs(this.player.loc.x - originalpos.x) > this.current_map.vel_limit.x) {
-    var throttled = this.player.loc.x - originalpos.x > 0 ? this.current_map.vel_limit.x : 0 - this.current_map.vel_limit.x;
+  if (
+    Math.abs(this.player.loc.x - originalpos.x) > this.current_map.vel_limit.x
+  ) {
+    var throttled =
+      this.player.loc.x - originalpos.x > 0
+        ? this.current_map.vel_limit.x
+        : 0 - this.current_map.vel_limit.x;
     this.player.loc.x = originalpos.x + throttled;
     this.player.vel.x = throttled;
   }
-  if (Math.abs(this.player.loc.y - originalpos.y) > this.current_map.vel_limit.y) {
-    var throttled = this.player.loc.y - originalpos.y > 0 ? this.current_map.vel_limit.y : 0 - this.current_map.vel_limit.y;
+  if (
+    Math.abs(this.player.loc.y - originalpos.y) > this.current_map.vel_limit.y
+  ) {
+    var throttled =
+      this.player.loc.y - originalpos.y > 0
+        ? this.current_map.vel_limit.y
+        : 0 - this.current_map.vel_limit.y;
     this.player.loc.y = originalpos.y + throttled;
     this.player.vel.y = throttled;
   }
-  
 
   // adjust camera
 
@@ -550,11 +580,11 @@ Clarity.prototype.move_player = function () {
 
   if (this.last_tile != tile.id && tile.script) {
     if (this.legacy_map) {
-      // Unsecure, could be XSS'd
       this.error("You're using legacy mapvar format, please update your map!");
-      eval(this.current_map.scripts[tile.script]);
+      var safeEval = makeSafeEval(["game", "console"]);
+      safeEval(this.current_map.scripts[tile.script]);
     } else {
-      this.current_map.scripts[tile.script]();
+      this.current_map.scripts[tile.script](); // this could be dangerous, fix later
     }
   }
 
@@ -580,7 +610,7 @@ Clarity.prototype.update_player = function () {
     }
   }
 
-  // Legacy walljump scripts ////////////////////////////////
+  // Legacy walljump scripts
   if (this.legacy_map) {
     if (this.key.up) {
       if (
@@ -639,7 +669,7 @@ Clarity.prototype.update_player = function () {
       this.allow_special_jump = true;
     }
   }
-  // End legacy scripts /////////////////////////////////////////////////////
+  // End legacy scripts
   this.move_player();
 };
 
@@ -675,7 +705,6 @@ Clarity.prototype.draw_player = function (context) {
 
     context.fill();
   }
-
   if (this.debug) {
     context.strokeRect(
       this.player.loc.x +
@@ -714,7 +743,6 @@ Clarity.prototype.draw_other_player = function (context, x, y, username) {
   );
 
   context.fill();
-
   if (this.debug) {
     context.strokeRect(
       x + this.tile_size / 2 - this.camera.x - this.tile_size / 2,
