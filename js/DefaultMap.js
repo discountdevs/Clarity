@@ -607,7 +607,7 @@ var Mapvar = function () {
 
   this.gravity = {
     x: 0.0,
-    y: 0.3,
+    y: 0.4,
   };
 
   /* Velocity limits */
@@ -620,9 +620,9 @@ var Mapvar = function () {
   /* Movement speed when the key is pressed */
 
   this.movement_speed = {
-    jump: 6,
-    left: 0.3,
-    right: 0.3,
+    jump: 8,
+    left: 0.5,
+    right: 0.5,
   };
 
   /* The coordinates at which the player spawns and the colour of the player */
@@ -673,12 +673,12 @@ var Mapvar = function () {
 
           if (game.detectSides(18).side == "left") {
             // Bump player off wall to the right using velocity
-            game.player.vel.x += game.current_map.movement_speed.jump;
+            game.player.vel.x += game.current_map.movement_speed.jump + 1.5;
           } else {
             // Same thing, but to the left
-            game.player.vel.x -= game.current_map.movement_speed.jump;
+            game.player.vel.x -= game.current_map.movement_speed.jump + 1.5;
           }
-          game.player.vel.y -= game.current_map.movement_speed.jump;
+          game.player.vel.y -= game.current_map.movement_speed.jump + 1.5;
         }
       } else {
         if (

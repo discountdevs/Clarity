@@ -190,8 +190,14 @@ Clarity.prototype.keyup = function (e) {
     case 32:
       _this.viewportControls.space = false;
       break;
+    case 82:
+      _this.reload();
   }
 };
+
+Clarity.prototype.reload = function () {
+  this.load_map(this.current_map);
+}
 
 Clarity.prototype.load_map = function (map) {
   this.player_img = null;
@@ -461,8 +467,8 @@ Clarity.prototype.move_player = function () {
     this.current_map.vel_limit.y
   );
 
-  var compensated_movement_x = this.player.vel.x * 60 * this.delta_time;
-  var compensated_movement_y = this.player.vel.y * 60 * this.delta_time;
+  var compensated_movement_x = this.player.vel.x * 45 * this.delta_time;
+  var compensated_movement_y = this.player.vel.y * 45 * this.delta_time;
 
   if (compensated_movement_x == NaN) {
     compensated_movement_x = 0;
@@ -517,7 +523,7 @@ Clarity.prototype.move_player = function () {
       this.get_tile(Math.floor(this.player.loc.x / this.tile_size), y_near2)
         .solid
     )
-      this.player.loc.x += 0.1 * 60 * this.delta_time;
+      this.player.loc.x += 0.1 * 45 * this.delta_time;
 
     while (
       this.get_tile(Math.ceil(this.player.loc.x / this.tile_size), y_near1)
@@ -525,7 +531,7 @@ Clarity.prototype.move_player = function () {
       this.get_tile(Math.ceil(this.player.loc.x / this.tile_size), y_near2)
         .solid
     )
-      this.player.loc.x -= 0.1 * 60 * this.delta_time;
+      this.player.loc.x -= 0.1 * 45 * this.delta_time;
 
     /* tile bounce */
 
@@ -548,7 +554,7 @@ Clarity.prototype.move_player = function () {
       this.get_tile(x_near2, Math.floor(this.player.loc.y / this.tile_size))
         .solid
     )
-      this.player.loc.y += 0.1 * 60 * this.delta_time;
+      this.player.loc.y += 0.1 * 45 * this.delta_time;
 
     while (
       this.get_tile(x_near1, Math.ceil(this.player.loc.y / this.tile_size))
@@ -556,7 +562,7 @@ Clarity.prototype.move_player = function () {
       this.get_tile(x_near2, Math.ceil(this.player.loc.y / this.tile_size))
         .solid
     )
-      this.player.loc.y -= 0.1 * 60 * this.delta_time;
+      this.player.loc.y -= 0.1 * 45 * this.delta_time;
 
     /* tile bounce */
 
@@ -897,10 +903,6 @@ Clarity.prototype.draw_other_player = function (context, x, y, username) {
 };
 
 Clarity.prototype.update = function () {
-  this.update_player();
-};
-
-Clarity.prototype.draw = function (context) {
   // Calculate FPS
   if (!this.last_update) {
     this.last_update = performance.now();
@@ -909,7 +911,10 @@ Clarity.prototype.draw = function (context) {
   this.fps = Math.round(1000 / (performance.now() - this.last_update));
   this.delta_time = (performance.now() - this.last_update) / 1000;
   this.last_update = performance.now();
+  this.update_player();
+};
 
+Clarity.prototype.draw = function (context) {
   this.draw_map(context, false);
   var _this = this;
   for (const username in _this.current_lobby) {
